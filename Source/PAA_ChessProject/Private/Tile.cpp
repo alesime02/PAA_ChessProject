@@ -8,6 +8,7 @@ ATile::ATile()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
+	
 	// template function that creates a components
 	Scene = CreateDefaultSubobject<USceneComponent>(TEXT("Scene"));
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
@@ -41,11 +42,12 @@ int32 ATile::GetOwner()
 
 void ATile::SetGridPosition(const double InX, const double InY)
 {
+	TileGridPosition.Set(InX, InY);
 }
 
 FVector2D ATile::GetGridPosition()
 {
-	return FVector2D();
+	return TileGridPosition;
 }
 
 // Called when the game starts or when spawned
