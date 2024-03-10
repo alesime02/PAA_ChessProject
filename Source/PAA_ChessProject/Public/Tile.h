@@ -28,6 +28,9 @@ public:
 	// get the tile status
 	ETileStatus GetTileStatus();
 
+	//get the static mesh component
+	UStaticMeshComponent* GetStatMeshComp();
+
 	// get the tile owner
 	int32 GetOwner();
 

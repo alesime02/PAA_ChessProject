@@ -35,6 +35,11 @@ ETileStatus ATile::GetTileStatus()
 	return Status;
 }
 
+UStaticMeshComponent* ATile::GetStatMeshComp()
+{
+	return StaticMeshComponent;
+}
+
 int32 ATile::GetOwner()
 {
 	return PlayerOwner;
@@ -56,6 +61,7 @@ void ATile::BeginPlay()
 	Super::BeginPlay();
 	
 }
+
 
 // Called every frame
 /*void ATile::Tick(float DeltaTime)

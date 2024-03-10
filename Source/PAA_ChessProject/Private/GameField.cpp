@@ -40,6 +40,18 @@ void AGameField::OnConstruction(const FTransform& Transform)
 
 void AGameField::ResetField()
 {
+	/*for (ATile* Obj : TileArray)
+	{
+		Obj->SetTileStatus(NOT_ASSIGNED, ETileStatus::EMPTY);
+	}
+
+	// send broadcast event to registered objects 
+	OnResetEvent.Broadcast();
+
+	ATTT_GameMode* GameMode = Cast<ATTT_GameMode>(GetWorld()->GetAuthGameMode());
+	GameMode->IsGameOver = false;
+	GameMode->MoveCounter = 0;
+	GameMode->ChoosePlayerAndStartGame();*/
 }
 
 void AGameField::GenerateField()
@@ -53,6 +65,13 @@ void AGameField::GenerateField()
 			const float TileScale = TileSize / 100;
 			Obj->SetActorScale3D(FVector(TileScale, TileScale, 0.2));
 			Obj->SetGridPosition(x, y);
+			if (((x + y) % 2) == 0)
+			{
+				FString MaterialPath = TEXT("/Game/Materials/MI_Black");
+				UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(NULL, nullptr, *MaterialPath));
+				UStaticMeshComponent* Comp = Obj->GetStatMeshComp();
+				Comp->SetMaterial(0, Material);
+			}
 			TileArray.Add(Obj);
 			TileMap.Add(FVector2D(x, y), Obj);
 		}
@@ -61,7 +80,7 @@ void AGameField::GenerateField()
 
 FVector2D AGameField::GetPosition(const FHitResult& Hit)
 {
-	return FVector2D();
+	return Cast<ATile>(Hit.GetActor())->GetGridPosition();
 }
 
 TArray<ATile*>& AGameField::GetTileArray()
