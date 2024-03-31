@@ -15,7 +15,7 @@ AGameField::AGameField()
 	// tile padding dimension
 	CellPadding = 0;
 	// pawns dimendion
-	PieceSize = 80;
+	PieceSize = 120;
 
 	FieldStatus = "rnbqkbnr/8/8/8/8/RNBQKBNR";
 }
@@ -89,7 +89,7 @@ void AGameField::SpawnPawns()
 {
 	int32 NewX = 7;
 	int32 NewY = 0;
-	FVector2D WhereToSpawn(NewX, NewY);
+	int32 h = 2;
 	FString Status = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
 	for (int32 i = 0; i < Status.Len(); ++i)
 	{
@@ -106,19 +106,19 @@ void AGameField::SpawnPawns()
 		}
 		if (Character >= 'B' && Character <= 'R')
 		{
-			FVector Location = AGameField::GetRelativeLocationByXYPosition(NewX, NewY);
+			FVector Location = AGameField::GetPieceRelativeLocationByXYPosition(NewX, NewY);
 			AChessRook* Obj = GetWorld()->SpawnActor<AChessRook>(RookClass, Location, FRotator::ZeroRotator);
 			const float TileScale = TileSize / 100;
-			Obj->SetActorScale3D(FVector(TileScale, TileScale, 0.4));
+			Obj->SetActorScale3D(FVector(TileScale, TileScale, 0.2));
 			Obj->SetGridPosition(NewX, NewY);
 			NewY += 1;
 		}
 		if (Character >= 'b' && Character <= 'r')
 		{
-			FVector Location = AGameField::GetRelativeLocationByXYPosition(NewX, NewY);
+			FVector Location = AGameField::GetPieceRelativeLocationByXYPosition(NewX, NewY);
 			AChessRook* Obj = GetWorld()->SpawnActor<AChessRook>(RookClass, Location, FRotator::ZeroRotator);
 			const float TileScale = TileSize / 100;
-			Obj->SetActorScale3D(FVector(TileScale, TileScale, 0.4));
+			Obj->SetActorScale3D(FVector(TileScale, TileScale, 0.2));
 			Obj->SetGridPosition(NewX, NewY);
 			Obj->ChangeBitColor();
 			FString MaterialPath = TEXT("/Game/Materials/M_Brook");
@@ -237,6 +237,12 @@ FVector AGameField::GetRelativeLocationByXYPosition(const int32 InX, const int32
 {
 	return TileSize * NormalizedCellPadding * FVector(InX, InY, 0);
 }
+
+FVector AGameField::GetPieceRelativeLocationByXYPosition(const int32 InX, const int32 InY) const
+{
+	return TileSize * FVector(InX, InY, 0.1);
+}
+
 
 FVector2D AGameField::GetXYPositionByRelativeLocation(const FVector& Location) const
 {

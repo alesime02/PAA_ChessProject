@@ -107,8 +107,11 @@ public:
 	// return the array of tile pointers
 	TArray<ATile*>& GetTileArray();
 
-	// return a relative position given (x,y) position
+	// return a relative position given (x,y) position of a tile
 	FVector GetRelativeLocationByXYPosition(const int32 InX, const int32 InY) const;
+
+	// return a relative position given (x,y) position of a piece
+	FVector GetPieceRelativeLocationByXYPosition(const int32 InX, const int32 InY) const;
 
 	// return (x,y) position given a relative position
 	FVector2D GetXYPositionByRelativeLocation(const FVector& Location) const;

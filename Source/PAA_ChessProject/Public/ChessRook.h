@@ -3,11 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Piece.h"
 #include "GameFramework/Actor.h"
 #include "ChessRook.generated.h"
 
 UCLASS()
-class PAA_CHESSPROJECT_API AChessRook : public AActor
+class PAA_CHESSPROJECT_API AChessRook : public APiece
 {
 	GENERATED_BODY()
 	
@@ -17,7 +18,7 @@ public:
 
 	UStaticMeshComponent* GetStatMeshComp();//aggiunto per i test
 
-	// get the tile owner
+	/*// get the tile owner
 	int32 GetColor();
 
 	//cambia il colore della pedina
@@ -27,15 +28,15 @@ public:
 	void SetGridPosition(const double InX, const double InY);
 
 	// get the (x, y) position, aggiunto per i test
-	FVector2D GetGridPosition();
+	FVector2D GetGridPosition();*/
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	// (x, y) position of the tile, aggiunto per i test
+	/*// (x, y) position of the tile, aggiunto per i test
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	FVector2D RookGridPosition;
+	FVector2D RookGridPosition;*/
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USceneComponent* Scene;
@@ -43,8 +44,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UStaticMeshComponent* StaticMeshComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	int32 BitColor;
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	int32 BitColor;*/
 
 public:	
 	// Called every frame

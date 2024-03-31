@@ -17,7 +17,7 @@ AChessRook::AChessRook()
 	SetRootComponent(Scene);
 	StaticMeshComponent->SetupAttachment(Scene);
 
-	RookGridPosition = FVector2D(0, 0);
+	/*RookGridPosition = FVector2D(0, 0); */
 }
 
 //aggiunto per i test
@@ -25,7 +25,7 @@ UStaticMeshComponent* AChessRook::GetStatMeshComp()
 {
 	return StaticMeshComponent;
 }
-
+/*
 //aggiunto per i test
 int32 AChessRook::GetColor()
 {
@@ -47,7 +47,7 @@ void AChessRook::SetGridPosition(const double InX, const double InY)
 FVector2D AChessRook::GetGridPosition()
 {
 	return RookGridPosition;
-}
+}*/
 
 // Called when the game starts or when spawned
 void AChessRook::BeginPlay()
