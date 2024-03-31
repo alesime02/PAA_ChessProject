@@ -15,9 +15,27 @@ public:
 	// Sets default values for this actor's properties
 	AChessRook();
 
+	UStaticMeshComponent* GetStatMeshComp();//aggiunto per i test
+
+	// get the tile owner
+	int32 GetColor();
+
+	//cambia il colore della pedina
+	void ChangeBitColor();
+
+	// set the (x, y) position, aggiunto per i test
+	void SetGridPosition(const double InX, const double InY);
+
+	// get the (x, y) position, aggiunto per i test
+	FVector2D GetGridPosition();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	// (x, y) position of the tile, aggiunto per i test
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	FVector2D RookGridPosition;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USceneComponent* Scene;

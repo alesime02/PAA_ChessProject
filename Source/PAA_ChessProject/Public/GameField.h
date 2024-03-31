@@ -4,6 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Tile.h"
+#include "ChessBishop.h"
+#include "ChessRook.h"
+#include "ChessQueen.h"
+#include "ChessKing.h"
+#include "ChessKnight.h"
+#include "ChessPawn.h"
 #include "GameFramework/Actor.h"
 #include "GameField.generated.h"
 
@@ -47,13 +53,37 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<ATile> TileClass;
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AChessRook> RookClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AChessBishop> BishopClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AChessKing> KingClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AChessQueen> QueenClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AChessKnight> KnightClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AChessPawn> PawnClass;
+
 	// tile padding dimension
-		UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float CellPadding;
 
 	// tile size
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float TileSize;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float PieceSize;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FString FieldStatus;
 
 	// Called when an instance of this class is placed (in editor) or spawned
 	virtual void OnConstruction(const FTransform& Transform) override;
@@ -64,6 +94,12 @@ public:
 
 	// generate an empty game field
 	void GenerateField();
+
+	// genera le pedine
+	void SpawnPawns();
+
+	//restituisce la stringa di stato
+	FString& GetStatus();
 
 	// return a (x,y) position given a hit (click) on a field tile
 	FVector2D GetPosition(const FHitResult& Hit);

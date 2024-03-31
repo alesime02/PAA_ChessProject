@@ -14,6 +14,10 @@ AGameField::AGameField()
 	TileSize = 120;
 	// tile padding dimension
 	CellPadding = 0;
+	// pawns dimendion
+	PieceSize = 80;
+
+	FieldStatus = "rnbqkbnr/8/8/8/8/RNBQKBNR";
 }
 
 // Called when the game starts or when spawned
@@ -21,6 +25,7 @@ void AGameField::BeginPlay()
 {
 	Super::BeginPlay();
 	GenerateField();
+	SpawnPawns();
 	
 }
 
@@ -54,6 +59,7 @@ void AGameField::ResetField()
 	GameMode->ChoosePlayerAndStartGame();*/
 }
 
+
 void AGameField::GenerateField()
 {
 	for (int32 x = 0; x < Size; x++)
@@ -78,6 +84,138 @@ void AGameField::GenerateField()
 	}
 }
 
+//spawn per test
+void AGameField::SpawnPawns()
+{
+	int32 NewX = 7;
+	int32 NewY = 0;
+	FVector2D WhereToSpawn(NewX, NewY);
+	FString Status = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+	for (int32 i = 0; i < Status.Len(); ++i)
+	{
+		TCHAR Character = Status[i];
+		if (Character == '/')
+		{
+			NewX -= 1;
+			NewY = 0;
+		}
+		if (Character >= '1' && Character <= '8')
+		{
+			int32 NumericValue = Character - '0';
+			NewY += NumericValue;
+		}
+		if (Character >= 'B' && Character <= 'R')
+		{
+			FVector Location = AGameField::GetRelativeLocationByXYPosition(NewX, NewY);
+			AChessRook* Obj = GetWorld()->SpawnActor<AChessRook>(RookClass, Location, FRotator::ZeroRotator);
+			const float TileScale = TileSize / 100;
+			Obj->SetActorScale3D(FVector(TileScale, TileScale, 0.4));
+			Obj->SetGridPosition(NewX, NewY);
+			NewY += 1;
+		}
+		if (Character >= 'b' && Character <= 'r')
+		{
+			FVector Location = AGameField::GetRelativeLocationByXYPosition(NewX, NewY);
+			AChessRook* Obj = GetWorld()->SpawnActor<AChessRook>(RookClass, Location, FRotator::ZeroRotator);
+			const float TileScale = TileSize / 100;
+			Obj->SetActorScale3D(FVector(TileScale, TileScale, 0.4));
+			Obj->SetGridPosition(NewX, NewY);
+			Obj->ChangeBitColor();
+			FString MaterialPath = TEXT("/Game/Materials/M_Brook");
+			UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(NULL, nullptr, *MaterialPath));
+			UStaticMeshComponent* Comp = Obj->GetStatMeshComp();
+			Comp->SetMaterial(0, Material);
+			NewY += 1;
+		}
+		
+	}
+}
+
+
+/*void AGameField::SpawnPawns()
+{
+	float NewX = 7.0f;
+	float NewY = 7.0f;
+	FVector2D WhereToSpawn(NewX, NewY);
+	for (int32 Index = 0; Index < FieldStatus.Len(); ++Index) 
+	{
+		TCHAR Character = FieldStatus.Mid(Index, 1).GetCharArray()[0];
+		//caso in cui è una lettera maiuscola
+		if (Character >= 'B' || Character <= 'R')
+		{
+			if (Character == 'R')
+			{
+				FVector Location = AGameField::GetRelativeLocationByXYPosition(NewX, NewY);
+				AChessRook* Obj = GetWorld()->SpawnActor<AChessRook>(TileClass, Location, FRotator::ZeroRotator);
+				const float Scale = TileSize / 100;
+				Obj->SetActorScale3D(FVector(Scale, Scale, 0.2));
+				Obj->SetGridPosition(NewX, NewY);
+			}
+			if (Character == 'N')
+			{
+
+			}
+			if (Character == 'B')
+			{
+
+			}
+			if (Character == 'Q')
+			{
+
+			}
+			if (Character == 'K')
+			{
+
+			}
+			if (Character == 'P')
+			{
+
+			}
+
+		}
+		//caso in cui è una lettera minuscola
+		if (Character >= 'b' || Character <= 'r')
+		{
+			if (Character == 'r')
+			{
+
+			}
+			if (Character == 'n')
+			{
+
+			}
+			if (Character == 'b')
+			{
+
+			}
+			if (Character == 'q')
+			{
+
+			}
+			if (Character == 'k')
+			{
+
+			}
+			if (Character == 'p')
+			{
+
+			}
+
+		}
+		//caso in cui è un numero
+		if (Character >= '1' || Character <= '8')
+		{
+
+		}
+		//caso carattere separatore
+		if (Character == '/')
+		{
+			continue;
+		}
+		
+	}
+}*/
+
 FVector2D AGameField::GetPosition(const FHitResult& Hit)
 {
 	return Cast<ATile>(Hit.GetActor())->GetGridPosition();
@@ -87,6 +225,13 @@ TArray<ATile*>& AGameField::GetTileArray()
 {
 	return TileArray;
 }
+
+FString& AGameField::GetStatus()
+{
+	return FieldStatus;
+}
+
+
 
 FVector AGameField::GetRelativeLocationByXYPosition(const int32 InX, const int32 InY) const
 {

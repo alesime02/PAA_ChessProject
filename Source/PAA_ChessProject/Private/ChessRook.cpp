@@ -16,6 +16,37 @@ AChessRook::AChessRook()
 	// every actor has a RootComponent that defines the transform in the World
 	SetRootComponent(Scene);
 	StaticMeshComponent->SetupAttachment(Scene);
+
+	RookGridPosition = FVector2D(0, 0);
+}
+
+//aggiunto per i test
+UStaticMeshComponent* AChessRook::GetStatMeshComp()
+{
+	return StaticMeshComponent;
+}
+
+//aggiunto per i test
+int32 AChessRook::GetColor()
+{
+	return BitColor;
+}
+
+void AChessRook::ChangeBitColor()
+{
+	BitColor = 0;
+}
+
+//aggiunto per i test
+void AChessRook::SetGridPosition(const double InX, const double InY)
+{
+	RookGridPosition.Set(InX, InY);
+}
+
+//aggiunto per i test
+FVector2D AChessRook::GetGridPosition()
+{
+	return RookGridPosition;
 }
 
 // Called when the game starts or when spawned
