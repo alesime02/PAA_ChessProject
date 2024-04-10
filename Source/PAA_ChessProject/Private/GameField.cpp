@@ -15,7 +15,7 @@ AGameField::AGameField()
 	// tile padding dimension
 	CellPadding = 0;
 	// pawns dimendion
-	PieceSize = 120;
+	PieceSize = 110;
 
 	FieldStatus = "rnbqkbnr/8/8/8/8/RNBQKBNR";
 }
@@ -91,6 +91,7 @@ void AGameField::SpawnPawns()
 	int32 NewY = 0;
 	int32 h = 2;
 	FString Status = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+	const float PieceScale = PieceSize / 100;
 	for (int32 i = 0; i < Status.Len(); ++i)
 	{
 		TCHAR Character = Status[i];
@@ -107,114 +108,144 @@ void AGameField::SpawnPawns()
 		if (Character >= 'B' && Character <= 'R')
 		{
 			FVector Location = AGameField::GetPieceRelativeLocationByXYPosition(NewX, NewY);
-			AChessRook* Obj = GetWorld()->SpawnActor<AChessRook>(RookClass, Location, FRotator::ZeroRotator);
-			const float TileScale = TileSize / 100;
-			Obj->SetActorScale3D(FVector(TileScale, TileScale, 0.2));
-			Obj->SetGridPosition(NewX, NewY);
-			NewY += 1;
+
+			if (Character == 'R')
+			{
+				AChessRook* Obj = GetWorld()->SpawnActor<AChessRook>(RookClass, Location, FRotator::ZeroRotator);
+				//const float PieceScale = PieceSize / 100;
+				Obj->SetActorScale3D(FVector(PieceScale, PieceScale, 0.2));
+				Obj->SetGridPosition(NewX, NewY);
+				NewY += 1;
+			}
+			if (Character == 'N')
+			{
+				AChessKnight* Obj = GetWorld()->SpawnActor<AChessKnight>(KnightClass, Location, FRotator::ZeroRotator);
+				//const float PieceScale = PieceSize / 100;
+				Obj->SetActorScale3D(FVector(PieceScale, PieceScale, 0.2));
+				Obj->SetGridPosition(NewX, NewY);
+				NewY += 1;
+			}
+			if (Character == 'B')
+			{
+				AChessBishop* Obj = GetWorld()->SpawnActor<AChessBishop>(BishopClass, Location, FRotator::ZeroRotator);
+				//const float PieceScale = PieceSize / 100;
+				Obj->SetActorScale3D(FVector(PieceScale, PieceScale, 0.2));
+				Obj->SetGridPosition(NewX, NewY);
+				NewY += 1;
+			}
+			if (Character == 'Q')
+			{
+				AChessQueen* Obj = GetWorld()->SpawnActor<AChessQueen>(QueenClass, Location, FRotator::ZeroRotator);
+				//const float PieceScale = PieceSize / 100;
+				Obj->SetActorScale3D(FVector(PieceScale, PieceScale, 0.2));
+				Obj->SetGridPosition(NewX, NewY);
+				NewY += 1;
+			}
+			if (Character == 'K')
+			{
+				AChessKing* Obj = GetWorld()->SpawnActor<AChessKing>(KingClass, Location, FRotator::ZeroRotator);
+				//const float PieceScale = PieceSize / 100;
+				Obj->SetActorScale3D(FVector(PieceScale, PieceScale, 0.2));
+				Obj->SetGridPosition(NewX, NewY);
+				NewY += 1;
+			}
+			if (Character == 'P')
+			{
+				AChessPawn* Obj = GetWorld()->SpawnActor<AChessPawn>(PawnClass, Location, FRotator::ZeroRotator);
+				//const float PieceScale = PieceSize / 100;
+				Obj->SetActorScale3D(FVector(PieceScale, PieceScale, 0.2));
+				Obj->SetGridPosition(NewX, NewY);
+				NewY += 1;
+			}
+
+
 		}
 		if (Character >= 'b' && Character <= 'r')
 		{
 			FVector Location = AGameField::GetPieceRelativeLocationByXYPosition(NewX, NewY);
-			AChessRook* Obj = GetWorld()->SpawnActor<AChessRook>(RookClass, Location, FRotator::ZeroRotator);
-			const float TileScale = TileSize / 100;
-			Obj->SetActorScale3D(FVector(TileScale, TileScale, 0.2));
-			Obj->SetGridPosition(NewX, NewY);
-			Obj->ChangeBitColor();
-			FString MaterialPath = TEXT("/Game/Materials/M_Brook");
-			UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(NULL, nullptr, *MaterialPath));
-			UStaticMeshComponent* Comp = Obj->GetStatMeshComp();
-			Comp->SetMaterial(0, Material);
-			NewY += 1;
-		}
-		
-	}
-}
 
-
-/*void AGameField::SpawnPawns()
-{
-	float NewX = 7.0f;
-	float NewY = 7.0f;
-	FVector2D WhereToSpawn(NewX, NewY);
-	for (int32 Index = 0; Index < FieldStatus.Len(); ++Index) 
-	{
-		TCHAR Character = FieldStatus.Mid(Index, 1).GetCharArray()[0];
-		//caso in cui è una lettera maiuscola
-		if (Character >= 'B' || Character <= 'R')
-		{
-			if (Character == 'R')
-			{
-				FVector Location = AGameField::GetRelativeLocationByXYPosition(NewX, NewY);
-				AChessRook* Obj = GetWorld()->SpawnActor<AChessRook>(TileClass, Location, FRotator::ZeroRotator);
-				const float Scale = TileSize / 100;
-				Obj->SetActorScale3D(FVector(Scale, Scale, 0.2));
-				Obj->SetGridPosition(NewX, NewY);
-			}
-			if (Character == 'N')
-			{
-
-			}
-			if (Character == 'B')
-			{
-
-			}
-			if (Character == 'Q')
-			{
-
-			}
-			if (Character == 'K')
-			{
-
-			}
-			if (Character == 'P')
-			{
-
-			}
-
-		}
-		//caso in cui è una lettera minuscola
-		if (Character >= 'b' || Character <= 'r')
-		{
 			if (Character == 'r')
 			{
-
+				AChessRook* Obj = GetWorld()->SpawnActor<AChessRook>(RookClass, Location, FRotator::ZeroRotator);
+				//const float PieceScale = PieceSize / 100;
+				Obj->SetActorScale3D(FVector(PieceScale, PieceScale, 0.2));
+				Obj->SetGridPosition(NewX, NewY);
+				Obj->ChangeBitColor();
+				FString MaterialPath = TEXT("/Game/Materials/M_Brook");
+				UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(NULL, nullptr, *MaterialPath));
+				UStaticMeshComponent* Comp = Obj->GetStatMeshComp();
+				Comp->SetMaterial(0, Material);
+				NewY += 1;
 			}
 			if (Character == 'n')
 			{
-
+				AChessKnight* Obj = GetWorld()->SpawnActor<AChessKnight>(KnightClass, Location, FRotator::ZeroRotator);
+				//const float PieceScale = PieceSize / 100;
+				Obj->SetActorScale3D(FVector(PieceScale, PieceScale, 0.2));
+				Obj->SetGridPosition(NewX, NewY);
+				Obj->ChangeBitColor();
+				FString MaterialPath = TEXT("/Game/Materials/M_Bknight");
+				UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(NULL, nullptr, *MaterialPath));
+				UStaticMeshComponent* Comp = Obj->GetStatMeshComp();
+				Comp->SetMaterial(0, Material);
+				NewY += 1;
 			}
 			if (Character == 'b')
 			{
-
+				AChessBishop* Obj = GetWorld()->SpawnActor<AChessBishop>(BishopClass, Location, FRotator::ZeroRotator);
+				//const float PieceScale = PieceSize / 100;
+				Obj->SetActorScale3D(FVector(PieceScale, PieceScale, 0.2));
+				Obj->SetGridPosition(NewX, NewY);
+				Obj->ChangeBitColor();
+				FString MaterialPath = TEXT("/Game/Materials/M_Bbishop");
+				UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(NULL, nullptr, *MaterialPath));
+				UStaticMeshComponent* Comp = Obj->GetStatMeshComp();
+				Comp->SetMaterial(0, Material);
+				NewY += 1;
 			}
 			if (Character == 'q')
 			{
-
+				AChessQueen* Obj = GetWorld()->SpawnActor<AChessQueen>(QueenClass, Location, FRotator::ZeroRotator);
+				//const float PieceScale = PieceSize / 100;
+				Obj->SetActorScale3D(FVector(PieceScale, PieceScale, 0.2));
+				Obj->SetGridPosition(NewX, NewY);
+				Obj->ChangeBitColor();
+				FString MaterialPath = TEXT("/Game/Materials/M_Bqueen");
+				UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(NULL, nullptr, *MaterialPath));
+				UStaticMeshComponent* Comp = Obj->GetStatMeshComp();
+				Comp->SetMaterial(0, Material);
+				NewY += 1;
 			}
 			if (Character == 'k')
 			{
-
+				AChessKing* Obj = GetWorld()->SpawnActor<AChessKing>(KingClass, Location, FRotator::ZeroRotator);
+				//const float PieceScale = PieceSize / 100;
+				Obj->SetActorScale3D(FVector(PieceScale, PieceScale, 0.2));
+				Obj->SetGridPosition(NewX, NewY);
+				Obj->ChangeBitColor();
+				FString MaterialPath = TEXT("/Game/Materials/M_Bking");
+				UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(NULL, nullptr, *MaterialPath));
+				UStaticMeshComponent* Comp = Obj->GetStatMeshComp();
+				Comp->SetMaterial(0, Material);
+				NewY += 1;
 			}
 			if (Character == 'p')
 			{
-
+				AChessPawn* Obj = GetWorld()->SpawnActor<AChessPawn>(PawnClass, Location, FRotator::ZeroRotator);
+				//const float PieceScale = PieceSize / 100;
+				Obj->SetActorScale3D(FVector(PieceScale, PieceScale, 0.2));
+				Obj->SetGridPosition(NewX, NewY);
+				Obj->ChangeBitColor();
+				FString MaterialPath = TEXT("/Game/Materials/M_Bpawn");
+				UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(NULL, nullptr, *MaterialPath));
+				UStaticMeshComponent* Comp = Obj->GetStatMeshComp();
+				Comp->SetMaterial(0, Material);
+				NewY += 1;
 			}
 
 		}
-		//caso in cui è un numero
-		if (Character >= '1' || Character <= '8')
-		{
-
-		}
-		//caso carattere separatore
-		if (Character == '/')
-		{
-			continue;
-		}
-		
 	}
-}*/
+}
 
 FVector2D AGameField::GetPosition(const FHitResult& Hit)
 {

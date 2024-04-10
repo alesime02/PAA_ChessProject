@@ -16,7 +16,7 @@ public:
 	// Sets default values for this actor's properties
 	AChessRook();
 
-	UStaticMeshComponent* GetStatMeshComp();//aggiunto per i test
+	UStaticMeshComponent* GetStatMeshComp();
 
 	/*// get the tile owner
 	int32 GetColor();

@@ -18,6 +18,11 @@ AChessKing::AChessKing()
 	StaticMeshComponent->SetupAttachment(Scene);
 }
 
+UStaticMeshComponent* AChessKing::GetStatMeshComp()
+{
+	return StaticMeshComponent;
+}
+
 // Called when the game starts or when spawned
 void AChessKing::BeginPlay()
 {

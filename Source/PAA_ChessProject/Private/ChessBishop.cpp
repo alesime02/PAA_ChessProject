@@ -19,6 +19,11 @@ AChessBishop::AChessBishop()
 
 }
 
+UStaticMeshComponent* AChessBishop::GetStatMeshComp()
+{
+	return StaticMeshComponent;
+}
+
 // Called when the game starts or when spawned
 void AChessBishop::BeginPlay()
 {

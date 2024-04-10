@@ -19,6 +19,11 @@ AChessPawn::AChessPawn()
 
 }
 
+UStaticMeshComponent* AChessPawn::GetStatMeshComp()
+{
+	return StaticMeshComponent;
+}
+
 // Called when the game starts or when spawned
 void AChessPawn::BeginPlay()
 {

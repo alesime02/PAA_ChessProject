@@ -19,6 +19,11 @@ AChessKnight::AChessKnight()
 
 }
 
+UStaticMeshComponent* AChessKnight::GetStatMeshComp()
+{
+	return StaticMeshComponent;
+}
+
 // Called when the game starts or when spawned
 void AChessKnight::BeginPlay()
 {

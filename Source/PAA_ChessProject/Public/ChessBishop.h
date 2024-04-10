@@ -3,17 +3,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Piece.h"
 #include "GameFramework/Actor.h"
 #include "ChessBishop.generated.h"
 
 UCLASS()
-class PAA_CHESSPROJECT_API AChessBishop : public AActor
+class PAA_CHESSPROJECT_API AChessBishop : public APiece
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
 	AChessBishop();
+
+	UStaticMeshComponent* GetStatMeshComp();
 
 protected:
 	// Called when the game starts or when spawned
@@ -24,9 +27,6 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UStaticMeshComponent* StaticMeshComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	int32 BitColor;
 
 
 public:	
