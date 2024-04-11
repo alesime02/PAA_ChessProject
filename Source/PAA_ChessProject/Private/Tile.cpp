@@ -18,16 +18,15 @@ ATile::ATile()
 	StaticMeshComponent->SetupAttachment(Scene);
 
 	Status = ETileStatus::EMPTY;
-	PlayerOwner = -1;
 	TileGridPosition = FVector2D(0, 0);
 
 
 }
 
-void ATile::SetTileStatus(const int32 TileOwner, const ETileStatus TileStatus)
+void ATile::SetTileStatus(const TCHAR Piece, const ETileStatus TileStatus)
 {
-	PlayerOwner = TileOwner;
 	Status = TileStatus;
+	Occupier = Piece;
 }
 
 ETileStatus ATile::GetTileStatus()
@@ -38,11 +37,6 @@ ETileStatus ATile::GetTileStatus()
 UStaticMeshComponent* ATile::GetStatMeshComp()
 {
 	return StaticMeshComponent;
-}
-
-int32 ATile::GetOwner()
-{
-	return PlayerOwner;
 }
 
 void ATile::SetGridPosition(const double InX, const double InY)

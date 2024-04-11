@@ -17,7 +17,7 @@ AGameField::AGameField()
 	// pawns dimendion
 	PieceSize = 110;
 
-	FieldStatus = "rnbqkbnr/8/8/8/8/RNBQKBNR";
+	FieldStatus = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
 }
 
 // Called when the game starts or when spawned
@@ -90,11 +90,10 @@ void AGameField::SpawnPawns()
 	int32 NewX = 7;
 	int32 NewY = 0;
 	int32 h = 2;
-	FString Status = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
 	const float PieceScale = PieceSize / 100;
-	for (int32 i = 0; i < Status.Len(); ++i)
+	for (int32 i = 0; i < FieldStatus.Len(); ++i)
 	{
-		TCHAR Character = Status[i];
+		TCHAR Character = FieldStatus[i];
 		if (Character == '/')
 		{
 			NewX -= 1;
@@ -115,6 +114,7 @@ void AGameField::SpawnPawns()
 				//const float PieceScale = PieceSize / 100;
 				Obj->SetActorScale3D(FVector(PieceScale, PieceScale, 0.2));
 				Obj->SetGridPosition(NewX, NewY);
+				TileMap[FVector2D(NewX, NewY)]->SetTileStatus('R', ETileStatus::WHITEOCCUPIED);
 				NewY += 1;
 			}
 			if (Character == 'N')

@@ -25,7 +25,7 @@ public:
 	void ChangeBitColor();
 
 	// get the piece owner by the color
-	int32 GetColor();
+	//int32 GetColor();
 
 	// (x, y) position of the tile, aggiunto per i test
 	FVector2D PieceGridPosition;

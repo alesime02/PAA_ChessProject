@@ -31,10 +31,10 @@ void APiece::ChangeBitColor()
 	BitColor = 1;
 }
 
-int32 APiece::GetColor()
+/*int32 APiece::GetColor()
 {
 	return BitColor;
-}
+}*/
 
 // Called when the game starts or when spawned
 void APiece::BeginPlay()

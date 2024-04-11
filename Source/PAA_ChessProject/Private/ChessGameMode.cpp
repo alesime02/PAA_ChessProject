@@ -14,7 +14,6 @@ AChessGameMode::AChessGameMode()
 {
 	PlayerControllerClass = AChessPlayerController::StaticClass();
 	DefaultPawnClass = AHumanPlayer::StaticClass();
-	FieldSize = 8;
 }
 
 void AChessGameMode::BeginPlay()
@@ -24,11 +23,12 @@ void AChessGameMode::BeginPlay()
 	IsGameOver = false;
 
 	AHumanPlayer* HumanPlayer = Cast<AHumanPlayer>(*TActorIterator<AHumanPlayer>(GetWorld()));
-
+	
+	int32 FieldSize;
 	if (GameFieldClass != nullptr)
 	{
 		GField = GetWorld()->SpawnActor<AGameField>(GameFieldClass);
-		//GField->Size = FieldSize;
+		FieldSize = GField->Size;
 	}
 	else
 	{
@@ -55,13 +55,27 @@ void AChessGameMode::BeginPlay()
 
 void AChessGameMode::ChoosePlayerAndStartGame()
 {
+	CurrentPlayer = FMath::RandRange(0, Players.Num() - 1);
+
+	for (int32 i = 0; i < Players.Num(); i++)
+	{
+		Players[i]->PlayerNumber = i;
+	}
+	Players[CurrentPlayer]->OnTurn();
 }
 
 int32 AChessGameMode::GetNextPlayer(int32 Player)
 {
-	return int32();
+	Player++;
+	if (!Players.IsValidIndex(Player))
+	{
+		Player = 0;
+	}
+	return Player;
 }
 
 void AChessGameMode::TurnNextPlayer()
 {
+	CurrentPlayer = GetNextPlayer(CurrentPlayer);
+	Players[CurrentPlayer]->OnTurn();
 }

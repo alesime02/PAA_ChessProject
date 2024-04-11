@@ -27,10 +27,6 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AGameField> GameFieldClass;
 
-	// field size
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	int32 FieldSize;
-
 	// reference to a GameField object
 	UPROPERTY(VisibleAnywhere)
 	AGameField* GField;

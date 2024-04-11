@@ -36,13 +36,18 @@ void ARandomPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 void ARandomPlayer::OnTurn()
 {
+
 }
 
 void ARandomPlayer::OnWin()
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("AI (Random) Wins!"));
+	GameInstance->SetTurnMessage(TEXT("AI Wins!"));
 }
 
 void ARandomPlayer::OnLose()
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("AI (Random) Loses!"));
+	GameInstance->SetTurnMessage(TEXT("AI Loses!"));
 }
 

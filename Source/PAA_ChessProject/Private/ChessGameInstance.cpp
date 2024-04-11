@@ -3,3 +3,12 @@
 
 #include "ChessGameInstance.h"
 
+FString UChessGameInstance::GetTurnMessage()
+{
+	return CurrentTurnMessage;
+}
+
+void UChessGameInstance::SetTurnMessage(FString Message)
+{
+	CurrentTurnMessage = Message;
+}

@@ -45,24 +45,45 @@ void AHumanPlayer::OnTurn()
 {
 	IsMyTurn = true;
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Your Turn"));
-	//GameInstance->SetTurnMessage(TEXT("Human Turn"));
+	GameInstance->SetTurnMessage(TEXT("Human Turn"));
 }
 
 void AHumanPlayer::OnWin()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("You Win!"));
-	//GameInstance->SetTurnMessage(TEXT("Human Wins!"));
-	//GameInstance->IncrementScoreHumanPlayer();
+	GameInstance->SetTurnMessage(TEXT("Human Wins!"));
 }
 
 void AHumanPlayer::OnLose()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("You Lose!"));
-	//GameInstance->SetTurnMessage(TEXT("Human Loses!"));
+	GameInstance->SetTurnMessage(TEXT("Human Loses!"));
 }
 
 void AHumanPlayer::OnClick()
 {
+	{
+		//Structure containing information about one hit of a trace, such as point of impact and surface normal at that point
+		FHitResult Hit = FHitResult(ForceInit);
+		// GetHitResultUnderCursor function sends a ray from the mouse position and gives the corresponding hit results
+		GetWorld()->GetFirstPlayerController()->GetHitResultUnderCursor(ECollisionChannel::ECC_Pawn, true, Hit);
+		if (Hit.bBlockingHit && IsMyTurn)
+		{
+			if (ATile* CurrTile = Cast<ATile>(Hit.GetActor()))
+			{
+				if (CurrTile->GetTileStatus() == ETileStatus::EMPTY)
+				{
+					// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("clicked"));
+					CurrTile->SetTileStatus(PlayerNumber, ETileStatus::WHITEOCCUPIED);
+					FVector SpawnPosition = CurrTile->GetActorLocation();
+					AChessGameMode* GameMode = Cast<AChessGameMode>(GetWorld()->GetAuthGameMode());
+					IsMyTurn = false;
+				}
+			}
+		}
 
+
+
+	}
 }
 

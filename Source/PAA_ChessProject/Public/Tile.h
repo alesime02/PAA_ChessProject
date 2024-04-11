@@ -10,7 +10,8 @@ UENUM()
 enum class ETileStatus : uint8
 {
 	EMPTY UMETA(DispayName = "Empty"),
-	OCCUPIED UMETA(DispayName = "Occupied"),
+	WHITEOCCUPIED UMETA(DispayName = "WhiteOccupied"),
+	BLACKOCCUPIED UMETA(DispayName = "BlackOccupied"),
 };
 
 UCLASS()
@@ -23,7 +24,7 @@ public:
 	ATile();
 
 	// set the player owner and the status of a tile
-	void SetTileStatus(const int32 TileOwner, const ETileStatus TileStatus);
+	void SetTileStatus(const TCHAR Piece, const ETileStatus TileStatus);
 
 	// get the tile status
 	ETileStatus GetTileStatus();
@@ -31,14 +32,14 @@ public:
 	//get the static mesh component
 	UStaticMeshComponent* GetStatMeshComp();
 
-	// get the tile owner
-	int32 GetOwner();
-
 	// set the (x, y) position
 	void SetGridPosition(const double InX, const double InY);
 
 	// get the (x, y) position
 	FVector2D GetGridPosition();
+
+	// Piece in that tile
+	TCHAR Occupier;
 
 protected:
 	// Called when the game starts or when spawned
@@ -52,9 +53,6 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	ETileStatus Status;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	int32 PlayerOwner;
 
 	// (x, y) position of the tile
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
