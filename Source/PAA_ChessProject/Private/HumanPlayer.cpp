@@ -67,16 +67,17 @@ void AHumanPlayer::OnClick()
 		FHitResult Hit = FHitResult(ForceInit);
 		// GetHitResultUnderCursor function sends a ray from the mouse position and gives the corresponding hit results
 		GetWorld()->GetFirstPlayerController()->GetHitResultUnderCursor(ECollisionChannel::ECC_Pawn, true, Hit);
+		int32 ClickBit = 0;
 		if (Hit.bBlockingHit && IsMyTurn)
 		{
-			if (ATile* CurrTile = Cast<ATile>(Hit.GetActor()))
+			if (APiece* CurrPiece = Cast<APiece>(Hit.GetActor()))
 			{
-				if (CurrTile->GetTileStatus() == ETileStatus::EMPTY)
+				if (CurrPiece->BitColor == 0)
 				{
-					// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("clicked"));
-					CurrTile->SetTileStatus(PlayerNumber, ETileStatus::WHITEOCCUPIED);
-					FVector SpawnPosition = CurrTile->GetActorLocation();
+					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("clicked"));
 					AChessGameMode* GameMode = Cast<AChessGameMode>(GetWorld()->GetAuthGameMode());
+					GameMode->LegalMoves(CurrPiece);
+					ClickBit = 1;
 					IsMyTurn = false;
 				}
 			}

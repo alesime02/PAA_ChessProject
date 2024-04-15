@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "PlayerInterface.h"
 #include "GameField.h"
-#include "GameFramework/GameModeBase.h"
+#include "GameFramework/GameModeBase.h"		
 #include "ChessGameMode.generated.h"
 
 /**
@@ -44,4 +44,8 @@ public:
 
 	// called at the end of the game turn
 	void TurnNextPlayer();
+
+	void LegalMoves(APiece* Current);
+
+	void FilterIllegals(APiece* Current);
 };

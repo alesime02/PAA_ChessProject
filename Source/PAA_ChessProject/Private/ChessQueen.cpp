@@ -24,6 +24,10 @@ UStaticMeshComponent* AChessQueen::GetStatMeshComp()
 	return StaticMeshComponent;
 }
 
+void AChessQueen::PossibleMoves(AGameField* Field)
+{
+}
+
 // Called when the game starts or when spawned
 void AChessQueen::BeginPlay()
 {

@@ -24,10 +24,14 @@ public:
 	ATile();
 
 	// set the player owner and the status of a tile
-	void SetTileStatus(const TCHAR Piece, const ETileStatus TileStatus);
+	void SetTileStatus(const ETileStatus TileStatus);
 
 	// get the tile status
 	ETileStatus GetTileStatus();
+
+	void SetOccupier(TCHAR pieceID);
+
+	TCHAR GetOccupier();
 
 	//get the static mesh component
 	UStaticMeshComponent* GetStatMeshComp();
@@ -37,9 +41,6 @@ public:
 
 	// get the (x, y) position
 	FVector2D GetGridPosition();
-
-	// Piece in that tile
-	TCHAR Occupier;
 
 protected:
 	// Called when the game starts or when spawned
@@ -57,6 +58,9 @@ protected:
 	// (x, y) position of the tile
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FVector2D TileGridPosition;
+
+	// Piece in that tile
+	TCHAR Occupier;
 
 public:	
 	// Called every frame

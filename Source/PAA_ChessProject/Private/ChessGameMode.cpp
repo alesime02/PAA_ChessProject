@@ -2,7 +2,6 @@
 
 
 #include "ChessGameMode.h"
-#include "ChessGameMode.h"
 #include "ChessPlayerController.h"
 #include "HumanPlayer.h"
 #include "RandomPlayer.h"
@@ -55,7 +54,7 @@ void AChessGameMode::BeginPlay()
 
 void AChessGameMode::ChoosePlayerAndStartGame()
 {
-	CurrentPlayer = FMath::RandRange(0, Players.Num() - 1);
+	CurrentPlayer = 0;
 
 	for (int32 i = 0; i < Players.Num(); i++)
 	{
@@ -79,3 +78,91 @@ void AChessGameMode::TurnNextPlayer()
 	CurrentPlayer = GetNextPlayer(CurrentPlayer);
 	Players[CurrentPlayer]->OnTurn();
 }
+
+void AChessGameMode::FilterIllegals(APiece* Current)
+{
+	if (Current->BitColor == 0) 
+	{
+		FVector2D KingPosition;
+		for (int32 i = 0; i < Current->Moves.Num(); i++) 
+		{
+			if (Current != GField->WhiteKing) 
+			{
+				KingPosition = GField->WhiteKing->PieceGridPosition;
+			}
+			else
+			{
+				KingPosition = Current->Moves[i];
+			}
+			ATile* Start = GField->TileMap[(Current->PieceGridPosition)];
+			Start->SetTileStatus(ETileStatus::EMPTY);
+			ATile* End = GField->TileMap[(Current->Moves[i])];
+			ETileStatus Previous = End->GetTileStatus();
+			End->SetTileStatus(ETileStatus::WHITEOCCUPIED);
+			for (int32 j = 0; j < GField->BPieceInGame.Num(); j++) 
+			{
+				APiece* Curr = GField->BPieceInGame[j];
+				Curr->PossibleMoves(GField);
+				for (int32 k = 0; k < Curr->Moves.Num(); k++) 
+				{
+					if (Curr->Moves[k] == KingPosition) 
+					{
+						Current->Moves.RemoveAt(i);
+					}
+				}
+				Start->SetTileStatus(ETileStatus::WHITEOCCUPIED);
+				End->SetTileStatus(Previous);
+			}
+		}
+	}
+	else
+	{
+		FVector2D KingPosition;
+		for (int32 i = 0; i < Current->Moves.Num(); i++)
+		{
+			if (Current != GField->BlackKing)
+			{
+				KingPosition = GField->BlackKing->PieceGridPosition;
+			}
+			else
+			{
+				KingPosition = Current->Moves[i];
+			}
+			ATile* Start = GField->TileMap[(Current->PieceGridPosition)];
+			Start->SetTileStatus(ETileStatus::EMPTY);
+			ATile* End = GField->TileMap[(Current->Moves[i])];
+			ETileStatus Previous = End->GetTileStatus();
+			End->SetTileStatus(ETileStatus::BLACKOCCUPIED);
+			for (int32 j = 0; j < GField->WPieceInGame.Num(); j++)
+			{
+				APiece* Curr = GField->WPieceInGame[j];
+				Curr->PossibleMoves(GField);
+				for (int32 k = 0; k < Curr->Moves.Num(); k++)
+				{
+					if (Curr->Moves[k] == KingPosition)
+					{
+						Current->Moves.RemoveAt(i);
+					}
+				}
+				Start->SetTileStatus(ETileStatus::BLACKOCCUPIED);
+				End->SetTileStatus(Previous);
+			}
+		}
+	}
+}
+
+
+void AChessGameMode::LegalMoves(APiece* Current)
+{
+	Current->PossibleMoves(GField);
+	FilterIllegals(Current);
+	for (int32 i = 0; i < Current->Moves.Num(); i++) 
+	{
+		ATile* LegalTile = GField->TileMap[(Current->Moves[i])];
+		FString MaterialPath = TEXT("/Game/Materials/MI_LegalMove");
+		UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(NULL, nullptr, *MaterialPath));
+		UStaticMeshComponent* Comp = LegalTile->GetStatMeshComp();
+		Comp->SetMaterial(0, Material);
+	}
+}
+

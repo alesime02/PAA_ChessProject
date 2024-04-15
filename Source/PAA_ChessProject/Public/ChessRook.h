@@ -18,17 +18,7 @@ public:
 
 	UStaticMeshComponent* GetStatMeshComp();
 
-	/*// get the tile owner
-	int32 GetColor();
-
-	//cambia il colore della pedina
-	void ChangeBitColor();
-
-	// set the (x, y) position, aggiunto per i test
-	void SetGridPosition(const double InX, const double InY);
-
-	// get the (x, y) position, aggiunto per i test
-	FVector2D GetGridPosition();*/
+	virtual void PossibleMoves(AGameField* Field) override;
 
 protected:
 	// Called when the game starts or when spawned

@@ -24,6 +24,13 @@ UStaticMeshComponent* AChessBishop::GetStatMeshComp()
 	return StaticMeshComponent;
 }
 
+void AChessBishop::PossibleMoves(AGameField* Field)
+{
+
+}
+
+
+
 // Called when the game starts or when spawned
 void AChessBishop::BeginPlay()
 {

@@ -17,7 +17,7 @@ AGameField::AGameField()
 	// pawns dimendion
 	PieceSize = 110;
 
-	FieldStatus = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+	FieldStatus = "rnbqkbnr/pppppppp/8/8/8/8/8/RNBQKBNR";
 }
 
 // Called when the game starts or when spawned
@@ -89,7 +89,6 @@ void AGameField::SpawnPawns()
 {
 	int32 NewX = 7;
 	int32 NewY = 0;
-	int32 h = 2;
 	const float PieceScale = PieceSize / 100;
 	for (int32 i = 0; i < FieldStatus.Len(); ++i)
 	{
@@ -114,8 +113,11 @@ void AGameField::SpawnPawns()
 				//const float PieceScale = PieceSize / 100;
 				Obj->SetActorScale3D(FVector(PieceScale, PieceScale, 0.2));
 				Obj->SetGridPosition(NewX, NewY);
-				TileMap[FVector2D(NewX, NewY)]->SetTileStatus('R', ETileStatus::WHITEOCCUPIED);
+				ATile* Position = TileMap[FVector2D(NewX, NewY)];
+				Position->SetTileStatus(ETileStatus::WHITEOCCUPIED);
+				Position->SetOccupier(Character);
 				NewY += 1;
+				WPieceInGame.Add(Obj);
 			}
 			if (Character == 'N')
 			{
@@ -123,7 +125,11 @@ void AGameField::SpawnPawns()
 				//const float PieceScale = PieceSize / 100;
 				Obj->SetActorScale3D(FVector(PieceScale, PieceScale, 0.2));
 				Obj->SetGridPosition(NewX, NewY);
+				ATile* Position = TileMap[FVector2D(NewX, NewY)];
+				Position->SetTileStatus(ETileStatus::WHITEOCCUPIED);
+				Position->SetOccupier(Character);
 				NewY += 1;
+				WPieceInGame.Add(Obj);
 			}
 			if (Character == 'B')
 			{
@@ -131,7 +137,11 @@ void AGameField::SpawnPawns()
 				//const float PieceScale = PieceSize / 100;
 				Obj->SetActorScale3D(FVector(PieceScale, PieceScale, 0.2));
 				Obj->SetGridPosition(NewX, NewY);
+				ATile* Position = TileMap[FVector2D(NewX, NewY)];
+				Position->SetTileStatus(ETileStatus::WHITEOCCUPIED);
+				Position->SetOccupier(Character);
 				NewY += 1;
+				WPieceInGame.Add(Obj);
 			}
 			if (Character == 'Q')
 			{
@@ -139,7 +149,11 @@ void AGameField::SpawnPawns()
 				//const float PieceScale = PieceSize / 100;
 				Obj->SetActorScale3D(FVector(PieceScale, PieceScale, 0.2));
 				Obj->SetGridPosition(NewX, NewY);
+				ATile* Position = TileMap[FVector2D(NewX, NewY)];
+				Position->SetTileStatus(ETileStatus::WHITEOCCUPIED);
+				Position->SetOccupier(Character);
 				NewY += 1;
+				WPieceInGame.Add(Obj);
 			}
 			if (Character == 'K')
 			{
@@ -147,7 +161,12 @@ void AGameField::SpawnPawns()
 				//const float PieceScale = PieceSize / 100;
 				Obj->SetActorScale3D(FVector(PieceScale, PieceScale, 0.2));
 				Obj->SetGridPosition(NewX, NewY);
+				ATile* Position = TileMap[FVector2D(NewX, NewY)];
+				Position->SetTileStatus(ETileStatus::WHITEOCCUPIED);
+				Position->SetOccupier(Character);
+				WhiteKing = Obj;
 				NewY += 1;
+				WPieceInGame.Add(Obj);
 			}
 			if (Character == 'P')
 			{
@@ -155,7 +174,11 @@ void AGameField::SpawnPawns()
 				//const float PieceScale = PieceSize / 100;
 				Obj->SetActorScale3D(FVector(PieceScale, PieceScale, 0.2));
 				Obj->SetGridPosition(NewX, NewY);
+				ATile* Position = TileMap[FVector2D(NewX, NewY)];
+				Position->SetTileStatus(ETileStatus::WHITEOCCUPIED);
+				Position->SetOccupier(Character);
 				NewY += 1;
+				WPieceInGame.Add(Obj);
 			}
 
 
@@ -175,7 +198,11 @@ void AGameField::SpawnPawns()
 				UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(NULL, nullptr, *MaterialPath));
 				UStaticMeshComponent* Comp = Obj->GetStatMeshComp();
 				Comp->SetMaterial(0, Material);
+				ATile* Position = TileMap[FVector2D(NewX, NewY)];
+				Position->SetTileStatus(ETileStatus::BLACKOCCUPIED);
+				Position->SetOccupier(Character);
 				NewY += 1;
+				BPieceInGame.Add(Obj);
 			}
 			if (Character == 'n')
 			{
@@ -188,7 +215,11 @@ void AGameField::SpawnPawns()
 				UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(NULL, nullptr, *MaterialPath));
 				UStaticMeshComponent* Comp = Obj->GetStatMeshComp();
 				Comp->SetMaterial(0, Material);
+				ATile* Position = TileMap[FVector2D(NewX, NewY)];
+				Position->SetTileStatus(ETileStatus::BLACKOCCUPIED);
+				Position->SetOccupier(Character);
 				NewY += 1;
+				BPieceInGame.Add(Obj);
 			}
 			if (Character == 'b')
 			{
@@ -201,7 +232,11 @@ void AGameField::SpawnPawns()
 				UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(NULL, nullptr, *MaterialPath));
 				UStaticMeshComponent* Comp = Obj->GetStatMeshComp();
 				Comp->SetMaterial(0, Material);
+				ATile* Position = TileMap[FVector2D(NewX, NewY)];
+				Position->SetTileStatus(ETileStatus::BLACKOCCUPIED);
+				Position->SetOccupier(Character);
 				NewY += 1;
+				BPieceInGame.Add(Obj);
 			}
 			if (Character == 'q')
 			{
@@ -214,7 +249,11 @@ void AGameField::SpawnPawns()
 				UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(NULL, nullptr, *MaterialPath));
 				UStaticMeshComponent* Comp = Obj->GetStatMeshComp();
 				Comp->SetMaterial(0, Material);
+				ATile* Position = TileMap[FVector2D(NewX, NewY)];
+				Position->SetTileStatus(ETileStatus::BLACKOCCUPIED);
+				Position->SetOccupier(Character);
 				NewY += 1;
+				BPieceInGame.Add(Obj);
 			}
 			if (Character == 'k')
 			{
@@ -227,7 +266,12 @@ void AGameField::SpawnPawns()
 				UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(NULL, nullptr, *MaterialPath));
 				UStaticMeshComponent* Comp = Obj->GetStatMeshComp();
 				Comp->SetMaterial(0, Material);
+				ATile* Position = TileMap[FVector2D(NewX, NewY)];
+				Position->SetTileStatus(ETileStatus::BLACKOCCUPIED);
+				Position->SetOccupier(Character);
+				BlackKing = Obj;
 				NewY += 1;
+				BPieceInGame.Add(Obj);
 			}
 			if (Character == 'p')
 			{
@@ -240,7 +284,11 @@ void AGameField::SpawnPawns()
 				UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(NULL, nullptr, *MaterialPath));
 				UStaticMeshComponent* Comp = Obj->GetStatMeshComp();
 				Comp->SetMaterial(0, Material);
+				ATile* Position = TileMap[FVector2D(NewX, NewY)];
+				Position->SetTileStatus(ETileStatus::BLACKOCCUPIED);
+				Position->SetOccupier(Character);
 				NewY += 1;
+				BPieceInGame.Add(Obj);
 			}
 
 		}

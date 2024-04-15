@@ -2,6 +2,7 @@
 
 
 #include "ChessPawn.h"
+#include "GameField.h"
 
 // Sets default values
 AChessPawn::AChessPawn()
@@ -23,6 +24,68 @@ UStaticMeshComponent* AChessPawn::GetStatMeshComp()
 {
 	return StaticMeshComponent;
 }
+
+void AChessPawn::PossibleMoves(AGameField* Field)
+{
+	const double StartX = this->PieceGridPosition[0];
+	const double StartY = this->PieceGridPosition[1];
+	if (this->BitColor == 0 && StartX < 7) 
+	{
+		FVector2D temp(StartX + 1, StartY);
+		ATile* Next = Field->TileMap[(temp)];
+		if (Next->GetTileStatus() == ETileStatus::EMPTY)
+		{
+			Moves.Add(temp);
+		}
+		if (StartY > 0)
+		{
+			temp.Y = StartY - 1;
+			ATile* NextLDiagonal = Field->TileMap[(temp)];
+			if (NextLDiagonal->GetTileStatus() == ETileStatus::BLACKOCCUPIED)
+			{
+				Moves.Add(temp);
+			}
+		}
+		if (StartY < 7)
+		{
+			temp.Y = StartY + 1;
+			ATile* NextRDiagonal = Field->TileMap[(temp)];
+			if (NextRDiagonal->GetTileStatus() == ETileStatus::BLACKOCCUPIED)
+			{
+				Moves.Add(temp);
+			}
+		}
+	}
+	else if (this->BitColor == 1 && StartX > 0)
+	{
+		FVector2D temp(StartX - 1, StartY);
+		ATile* Next = Field->TileMap[(temp)];
+		if (Next->GetTileStatus() == ETileStatus::EMPTY)
+		{
+			Moves.Add(temp);
+		}
+		if (StartY > 0)
+		{
+			temp.Y = StartY - 1;
+			ATile* NextLDiagonal = Field->TileMap[(temp)];
+			if (NextLDiagonal->GetTileStatus() == ETileStatus::WHITEOCCUPIED)
+			{
+				Moves.Add(temp);
+			}
+		}
+		if (StartY < 7)
+		{
+			temp.Y = StartY + 1;
+			ATile* NextRDiagonal = Field->TileMap[(temp)];
+			if (NextRDiagonal->GetTileStatus() == ETileStatus::WHITEOCCUPIED)
+			{
+				Moves.Add(temp);
+			}
+		}
+	}
+}
+
+
 
 // Called when the game starts or when spawned
 void AChessPawn::BeginPlay()

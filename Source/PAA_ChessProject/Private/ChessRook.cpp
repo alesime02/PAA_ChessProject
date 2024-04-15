@@ -2,6 +2,7 @@
 
 
 #include "ChessRook.h"
+#include "GameField.h"
 
 // Sets default values
 AChessRook::AChessRook()
@@ -25,29 +26,106 @@ UStaticMeshComponent* AChessRook::GetStatMeshComp()
 {
 	return StaticMeshComponent;
 }
-/*
-//aggiunto per i test
-int32 AChessRook::GetColor()
+void AChessRook::PossibleMoves(AGameField* Field)
 {
-	return BitColor;
+	double StartX = this->PieceGridPosition[0];
+	double StartY = this->PieceGridPosition[1];
+	ETileStatus Status;
+	FVector2D temp(StartX, StartY);
+	if (this->BitColor == 0) 
+	{
+		Status = ETileStatus::BLACKOCCUPIED;
+	}
+	else 
+	{
+		Status = ETileStatus::WHITEOCCUPIED;
+	}
+	// Checking the possible moves on X+
+	for (double i = StartX; i < 7; i++) 
+	{
+		temp.X +=  1;
+		ATile* Next = Field->TileMap[(temp)];
+		if (Next->GetTileStatus() == ETileStatus::EMPTY) 
+		{
+			this->Moves.Add(temp);
+		}
+		else if (Next->GetTileStatus() == Status) 
+		{
+			this->Moves.Add(temp);
+			i = 7;
+		}
+		else 
+		{
+			i = 7;
+		}
+	}
+	temp.X = StartX;
+
+
+	// Checking the possible moves on X-
+	for (double i = StartX; i > 0; i--)
+	{
+		temp.X -= 1;
+		ATile* Next = Field->TileMap[(temp)];
+		if (Next->GetTileStatus() == ETileStatus::EMPTY || Next->GetTileStatus() == Status)
+		{
+			this->Moves.Add(temp);
+		}
+		else if (Next->GetTileStatus() == Status)
+		{
+			this->Moves.Add(temp);
+			i = 0;
+		}
+		else
+		{
+			i = 0;
+		}
+	}
+	temp.X = StartX;
+
+	// Checking teh possible moves on Y+
+	for (double i = StartY; i < 7; i++)
+	{
+		temp.Y += 1;
+		ATile* Next = Field->TileMap[(temp)];
+		if (Next->GetTileStatus() == ETileStatus::EMPTY || Next->GetTileStatus() == Status)
+		{
+			this->Moves.Add(temp);
+		}
+		else if (Next->GetTileStatus() == Status)
+		{
+			this->Moves.Add(temp);
+			i = 7;
+		}
+		else
+		{
+			i = 7;
+		}
+	}
+	temp.Y = StartY;
+
+	// Checking the possible moves on Y-
+	for (double i = StartY; i > 0; i--)
+	{
+		temp.Y -= 1;
+		ATile* Next = Field->TileMap[(temp)];
+		if (Next->GetTileStatus() == ETileStatus::EMPTY || Next->GetTileStatus() == Status)
+		{
+			this->Moves.Add(temp);
+		}
+		else if (Next->GetTileStatus() == Status)
+		{
+			this->Moves.Add(temp);
+			i = 0;
+		}
+		else
+		{
+			i = 0;
+		}
+	}
+	temp.Y = StartY;
 }
 
-void AChessRook::ChangeBitColor()
-{
-	BitColor = 0;
-}
-
-//aggiunto per i test
-void AChessRook::SetGridPosition(const double InX, const double InY)
-{
-	RookGridPosition.Set(InX, InY);
-}
-
-//aggiunto per i test
-FVector2D AChessRook::GetGridPosition()
-{
-	return RookGridPosition;
-}*/
 
 // Called when the game starts or when spawned
 void AChessRook::BeginPlay()

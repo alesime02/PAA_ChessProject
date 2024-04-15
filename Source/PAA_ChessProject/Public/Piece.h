@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Tile.h"
 #include "Piece.generated.h"
+
+class AGameField;
 
 UCLASS()
 class PAA_CHESSPROJECT_API APiece : public AActor
@@ -30,6 +33,10 @@ public:
 	// (x, y) position of the tile, aggiunto per i test
 	FVector2D PieceGridPosition;
 
+	// array of the legal moves
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TArray<FVector2D> Moves;
+
 	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USceneComponent* Scene;
 
@@ -37,6 +44,8 @@ public:
 	UStaticMeshComponent* StaticMeshComponent;*/
 
 	int32 BitColor = 0;
+
+	virtual void PossibleMoves(AGameField* Field) {};
 
 protected:
 	// Called when the game starts or when spawned

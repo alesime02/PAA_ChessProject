@@ -18,6 +18,8 @@ public:
 
 	UStaticMeshComponent* GetStatMeshComp();
 
+	virtual void PossibleMoves(AGameField* Field) override;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

@@ -23,15 +23,24 @@ ATile::ATile()
 
 }
 
-void ATile::SetTileStatus(const TCHAR Piece, const ETileStatus TileStatus)
+void ATile::SetTileStatus(const ETileStatus TileStatus)
 {
 	Status = TileStatus;
-	Occupier = Piece;
 }
 
 ETileStatus ATile::GetTileStatus()
 {
 	return Status;
+}
+
+void ATile::SetOccupier(TCHAR pieceID)
+{
+	Occupier = pieceID;
+}
+
+TCHAR ATile::GetOccupier()
+{
+	return Occupier;
 }
 
 UStaticMeshComponent* ATile::GetStatMeshComp()
