@@ -7,7 +7,7 @@
 #include "Tile.generated.h"
 
 UENUM()
-enum class ETileStatus : uint8
+enum class EStatus : uint8
 {
 	EMPTY UMETA(DispayName = "Empty"),
 	WHITEOCCUPIED UMETA(DispayName = "WhiteOccupied"),
@@ -24,10 +24,10 @@ public:
 	ATile();
 
 	// set the player owner and the status of a tile
-	void SetTileStatus(const ETileStatus TileStatus);
+	void SetTileStatus(const EStatus TileStatus);
 
 	// get the tile status
-	ETileStatus GetTileStatus();
+	EStatus GetTileStatus();
 
 	void SetOccupier(TCHAR pieceID);
 
@@ -53,7 +53,7 @@ protected:
 	UStaticMeshComponent* StaticMeshComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	ETileStatus Status;
+	EStatus Status;
 
 	// (x, y) position of the tile
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)

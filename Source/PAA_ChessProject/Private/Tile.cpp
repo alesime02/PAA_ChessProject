@@ -17,18 +17,18 @@ ATile::ATile()
 	SetRootComponent(Scene);
 	StaticMeshComponent->SetupAttachment(Scene);
 
-	Status = ETileStatus::EMPTY;
+	Status = EStatus::EMPTY;
 	TileGridPosition = FVector2D(0, 0);
 
 
 }
 
-void ATile::SetTileStatus(const ETileStatus TileStatus)
+void ATile::SetTileStatus(const EStatus TileStatus)
 {
 	Status = TileStatus;
 }
 
-ETileStatus ATile::GetTileStatus()
+EStatus ATile::GetTileStatus()
 {
 	return Status;
 }

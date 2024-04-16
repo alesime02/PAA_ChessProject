@@ -30,26 +30,61 @@ void AChessRook::PossibleMoves(AGameField* Field)
 {
 	double StartX = this->PieceGridPosition[0];
 	double StartY = this->PieceGridPosition[1];
-	ETileStatus Status;
-	FVector2D temp(StartX, StartY);
-	if (this->BitColor == 0) 
+	EStatus EnemyStatus;
+	TArray<FVector2D> Directions = { FVector2D(1,0), FVector2D(-1,0), FVector2D(0,1), FVector2D(0,-1) };
+	if (this->BitColor == 0)
 	{
-		Status = ETileStatus::BLACKOCCUPIED;
+		EnemyStatus = EStatus::BLACKOCCUPIED;
 	}
-	else 
+	else
 	{
-		Status = ETileStatus::WHITEOCCUPIED;
+		EnemyStatus = EStatus::WHITEOCCUPIED;
 	}
+	for (int32 i = 0; i < Directions.Num(); i++)
+	{
+		FVector2D temp(StartX, StartY);
+		temp = temp + Directions[i];
+		while (Field->TileMap.Find(temp) != nullptr)
+		{
+			ATile* PossibleNext = Field->TileMap[temp];
+			if (PossibleNext->GetTileStatus() == EStatus::EMPTY)
+			{
+				this->Moves.Add(temp);
+				temp = temp + Directions[i];
+			}
+			else if (PossibleNext->GetTileStatus() == EnemyStatus)
+			{
+				this->Moves.Add(temp);
+				temp.X = StartX;
+				temp.Y = StartY;
+				break;
+			}
+			else
+			{
+				temp.X = StartX;
+				temp.Y = StartY;
+				break;
+			}
+
+		}
+	}
+}
+
+	
+
+
+
+	/*
 	// Checking the possible moves on X+
 	for (double i = StartX; i < 7; i++) 
 	{
 		temp.X +=  1;
 		ATile* Next = Field->TileMap[(temp)];
-		if (Next->GetTileStatus() == ETileStatus::EMPTY) 
+		if (Next->GetTileStatus() == EStatus::EMPTY)
 		{
 			this->Moves.Add(temp);
 		}
-		else if (Next->GetTileStatus() == Status) 
+		else if (Next->GetTileStatus() == EnemyStatus) 
 		{
 			this->Moves.Add(temp);
 			i = 7;
@@ -67,11 +102,11 @@ void AChessRook::PossibleMoves(AGameField* Field)
 	{
 		temp.X -= 1;
 		ATile* Next = Field->TileMap[(temp)];
-		if (Next->GetTileStatus() == ETileStatus::EMPTY || Next->GetTileStatus() == Status)
+		if (Next->GetTileStatus() == EStatus::EMPTY)
 		{
 			this->Moves.Add(temp);
 		}
-		else if (Next->GetTileStatus() == Status)
+		else if (Next->GetTileStatus() == EnemyStatus)
 		{
 			this->Moves.Add(temp);
 			i = 0;
@@ -83,16 +118,16 @@ void AChessRook::PossibleMoves(AGameField* Field)
 	}
 	temp.X = StartX;
 
-	// Checking teh possible moves on Y+
+	// Checking the possible moves on Y+
 	for (double i = StartY; i < 7; i++)
 	{
 		temp.Y += 1;
 		ATile* Next = Field->TileMap[(temp)];
-		if (Next->GetTileStatus() == ETileStatus::EMPTY || Next->GetTileStatus() == Status)
+		if (Next->GetTileStatus() == EStatus::EMPTY)
 		{
 			this->Moves.Add(temp);
 		}
-		else if (Next->GetTileStatus() == Status)
+		else if (Next->GetTileStatus() == EnemyStatus)
 		{
 			this->Moves.Add(temp);
 			i = 7;
@@ -109,11 +144,11 @@ void AChessRook::PossibleMoves(AGameField* Field)
 	{
 		temp.Y -= 1;
 		ATile* Next = Field->TileMap[(temp)];
-		if (Next->GetTileStatus() == ETileStatus::EMPTY || Next->GetTileStatus() == Status)
+		if (Next->GetTileStatus() == EStatus::EMPTY)
 		{
 			this->Moves.Add(temp);
 		}
-		else if (Next->GetTileStatus() == Status)
+		else if (Next->GetTileStatus() == EnemyStatus) 
 		{
 			this->Moves.Add(temp);
 			i = 0;
@@ -123,8 +158,7 @@ void AChessRook::PossibleMoves(AGameField* Field)
 			i = 0;
 		}
 	}
-	temp.Y = StartY;
-}
+}*/
 
 
 // Called when the game starts or when spawned

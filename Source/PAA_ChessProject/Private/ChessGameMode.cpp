@@ -95,10 +95,10 @@ void AChessGameMode::FilterIllegals(APiece* Current)
 				KingPosition = Current->Moves[i];
 			}
 			ATile* Start = GField->TileMap[(Current->PieceGridPosition)];
-			Start->SetTileStatus(ETileStatus::EMPTY);
+			Start->SetTileStatus(EStatus::EMPTY);
 			ATile* End = GField->TileMap[(Current->Moves[i])];
-			ETileStatus Previous = End->GetTileStatus();
-			End->SetTileStatus(ETileStatus::WHITEOCCUPIED);
+			EStatus Previous = End->GetTileStatus();
+			End->SetTileStatus(EStatus::WHITEOCCUPIED);
 			for (int32 j = 0; j < GField->BPieceInGame.Num(); j++) 
 			{
 				APiece* Curr = GField->BPieceInGame[j];
@@ -110,7 +110,7 @@ void AChessGameMode::FilterIllegals(APiece* Current)
 						Current->Moves.RemoveAt(i);
 					}
 				}
-				Start->SetTileStatus(ETileStatus::WHITEOCCUPIED);
+				Start->SetTileStatus(EStatus::WHITEOCCUPIED);
 				End->SetTileStatus(Previous);
 			}
 		}
@@ -129,10 +129,10 @@ void AChessGameMode::FilterIllegals(APiece* Current)
 				KingPosition = Current->Moves[i];
 			}
 			ATile* Start = GField->TileMap[(Current->PieceGridPosition)];
-			Start->SetTileStatus(ETileStatus::EMPTY);
+			Start->SetTileStatus(EStatus::EMPTY);
 			ATile* End = GField->TileMap[(Current->Moves[i])];
-			ETileStatus Previous = End->GetTileStatus();
-			End->SetTileStatus(ETileStatus::BLACKOCCUPIED);
+			EStatus Previous = End->GetTileStatus();
+			End->SetTileStatus(EStatus::BLACKOCCUPIED);
 			for (int32 j = 0; j < GField->WPieceInGame.Num(); j++)
 			{
 				APiece* Curr = GField->WPieceInGame[j];
@@ -144,7 +144,7 @@ void AChessGameMode::FilterIllegals(APiece* Current)
 						Current->Moves.RemoveAt(i);
 					}
 				}
-				Start->SetTileStatus(ETileStatus::BLACKOCCUPIED);
+				Start->SetTileStatus(EStatus::BLACKOCCUPIED);
 				End->SetTileStatus(Previous);
 			}
 		}

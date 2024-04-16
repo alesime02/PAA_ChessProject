@@ -26,6 +26,7 @@ UStaticMeshComponent* AChessKnight::GetStatMeshComp()
 
 void AChessKnight::PossibleMoves(AGameField* Field)
 {
+
 }
 
 // Called when the game starts or when spawned

@@ -33,7 +33,7 @@ void AChessPawn::PossibleMoves(AGameField* Field)
 	{
 		FVector2D temp(StartX + 1, StartY);
 		ATile* Next = Field->TileMap[(temp)];
-		if (Next->GetTileStatus() == ETileStatus::EMPTY)
+		if (Next->GetTileStatus() == EStatus::EMPTY)
 		{
 			Moves.Add(temp);
 		}
@@ -41,7 +41,7 @@ void AChessPawn::PossibleMoves(AGameField* Field)
 		{
 			temp.Y = StartY - 1;
 			ATile* NextLDiagonal = Field->TileMap[(temp)];
-			if (NextLDiagonal->GetTileStatus() == ETileStatus::BLACKOCCUPIED)
+			if (NextLDiagonal->GetTileStatus() == EStatus::BLACKOCCUPIED)
 			{
 				Moves.Add(temp);
 			}
@@ -50,7 +50,7 @@ void AChessPawn::PossibleMoves(AGameField* Field)
 		{
 			temp.Y = StartY + 1;
 			ATile* NextRDiagonal = Field->TileMap[(temp)];
-			if (NextRDiagonal->GetTileStatus() == ETileStatus::BLACKOCCUPIED)
+			if (NextRDiagonal->GetTileStatus() == EStatus::BLACKOCCUPIED)
 			{
 				Moves.Add(temp);
 			}
@@ -60,7 +60,7 @@ void AChessPawn::PossibleMoves(AGameField* Field)
 	{
 		FVector2D temp(StartX - 1, StartY);
 		ATile* Next = Field->TileMap[(temp)];
-		if (Next->GetTileStatus() == ETileStatus::EMPTY)
+		if (Next->GetTileStatus() == EStatus::EMPTY)
 		{
 			Moves.Add(temp);
 		}
@@ -68,7 +68,7 @@ void AChessPawn::PossibleMoves(AGameField* Field)
 		{
 			temp.Y = StartY - 1;
 			ATile* NextLDiagonal = Field->TileMap[(temp)];
-			if (NextLDiagonal->GetTileStatus() == ETileStatus::WHITEOCCUPIED)
+			if (NextLDiagonal->GetTileStatus() == EStatus::WHITEOCCUPIED)
 			{
 				Moves.Add(temp);
 			}
@@ -77,7 +77,7 @@ void AChessPawn::PossibleMoves(AGameField* Field)
 		{
 			temp.Y = StartY + 1;
 			ATile* NextRDiagonal = Field->TileMap[(temp)];
-			if (NextRDiagonal->GetTileStatus() == ETileStatus::WHITEOCCUPIED)
+			if (NextRDiagonal->GetTileStatus() == EStatus::WHITEOCCUPIED)
 			{
 				Moves.Add(temp);
 			}

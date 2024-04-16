@@ -2,6 +2,7 @@
 
 
 #include "ChessQueen.h"
+#include "GameField.h"
 
 // Sets default values
 AChessQueen::AChessQueen()
@@ -26,6 +27,46 @@ UStaticMeshComponent* AChessQueen::GetStatMeshComp()
 
 void AChessQueen::PossibleMoves(AGameField* Field)
 {
+	double StartX = this->PieceGridPosition[0];
+	double StartY = this->PieceGridPosition[1];
+	EStatus EnemyStatus;
+	TArray<FVector2D> Directions = { FVector2D(1,0), FVector2D(-1,0), FVector2D(0,1), FVector2D(0,-1), FVector2D(1,1), FVector2D(-1,1), FVector2D(1,-1), FVector2D(-1,-1) };
+	if (this->BitColor == 0)
+	{
+		EnemyStatus = EStatus::BLACKOCCUPIED;
+	}
+	else
+	{
+		EnemyStatus = EStatus::WHITEOCCUPIED;
+	}
+	for (int32 i = 0; i < Directions.Num(); i++)
+	{
+		FVector2D temp(StartX, StartY);
+		temp = temp + Directions[i];
+		while (Field->TileMap.Find(temp) != nullptr)
+		{
+			ATile* PossibleNext = Field->TileMap[temp];
+			if (PossibleNext->GetTileStatus() == EStatus::EMPTY)
+			{
+				this->Moves.Add(temp);
+				temp = temp + Directions[i];
+			}
+			else if (PossibleNext->GetTileStatus() == EnemyStatus)
+			{
+				this->Moves.Add(temp);
+				temp.X = StartX;
+				temp.Y = StartY;
+				break;
+			}
+			else
+			{
+				temp.X = StartX;
+				temp.Y = StartY;
+				break;
+			}
+
+		}
+	}
 }
 
 // Called when the game starts or when spawned
