@@ -62,29 +62,84 @@ void AHumanPlayer::OnLose()
 
 void AHumanPlayer::OnClick()
 {
+	
+	//Structure containing information about one hit of a trace, such as point of impact and surface normal at that point
+	FHitResult Hit = FHitResult(ForceInit);
+	// GetHitResultUnderCursor function sends a ray from the mouse position and gives the corresponding hit results
+	GetWorld()->GetFirstPlayerController()->GetHitResultUnderCursor(ECollisionChannel::ECC_Pawn, true, Hit);
+	if (Hit.bBlockingHit && IsMyTurn)
 	{
-		//Structure containing information about one hit of a trace, such as point of impact and surface normal at that point
-		FHitResult Hit = FHitResult(ForceInit);
-		// GetHitResultUnderCursor function sends a ray from the mouse position and gives the corresponding hit results
-		GetWorld()->GetFirstPlayerController()->GetHitResultUnderCursor(ECollisionChannel::ECC_Pawn, true, Hit);
-		int32 ClickBit = 0;
-		if (Hit.bBlockingHit && IsMyTurn)
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Tocco"));
+		if (APiece* CurrPiece = Cast<APiece>(Hit.GetActor()))
 		{
-			if (APiece* CurrPiece = Cast<APiece>(Hit.GetActor()))
+			if (CurrPiece->BitColor == 0)
 			{
-				if (CurrPiece->BitColor == 0)
+				AChessGameMode* GameMode = Cast<AChessGameMode>(GetWorld()->GetAuthGameMode());
+				if (ClickBit) 
 				{
-					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("clicked"));
-					AChessGameMode* GameMode = Cast<AChessGameMode>(GetWorld()->GetAuthGameMode());
-					GameMode->LegalMoves(CurrPiece);
-					ClickBit = 1;
-					IsMyTurn = false;
+					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Decoloring Tiles"));
+					for (auto i : GameMode->GField->TileArray) 
+					{
+						FVector2D Coordinates = i->GetGridPosition();
+						int32 x = Coordinates.X;
+						int32 y = Coordinates.Y;
+						if (((x + y) % 2) == 0)
+						{
+							FString MaterialPath = TEXT("/Game/Materials/MI_Black");
+							UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(NULL, nullptr, *MaterialPath));
+							UStaticMeshComponent* Comp = i->GetStatMeshComp();
+							Comp->SetMaterial(0, Material);
+						}
+						else
+						{
+							FString MaterialPath = TEXT("/Game/Materials/MI_White");
+							UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(NULL, nullptr, *MaterialPath));
+							UStaticMeshComponent* Comp = i->GetStatMeshComp();
+							Comp->SetMaterial(0, Material);
+						}
+						ClickBit = false;
+					}
+				}
+				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("calcola mosse"));
+				GameMode->LegalMoves(CurrPiece);
+				PieceToMove = CurrPiece;
+				ClickBit = true;
+			}
+		}
+		if (ATile* MoveTo = Cast<ATile>(Hit.GetActor()))
+		{
+			AChessGameMode* GameMode = Cast<AChessGameMode>(GetWorld()->GetAuthGameMode());
+			if (PieceToMove != nullptr) 
+			{
+				for (auto iterator : PieceToMove->Moves) 
+				{
+					if (MoveTo->GetGridPosition() == iterator) 
+					{
+						ATile* Start = GameMode->GField->TileMap[PieceToMove->PieceGridPosition];
+						Start->SetTileStatus(EStatus::EMPTY);
+						MoveTo->SetTileStatus(EStatus::WHITEOCCUPIED);
+						int32 x = MoveTo->GetGridPosition().X;
+						int32 y = MoveTo->GetGridPosition().Y;
+						FVector WhereToGo = GameMode->GField->GetPieceRelativeLocationByXYPosition(x,y);
+						PieceToMove->SetActorLocation(WhereToGo);
+						PieceToMove->PieceGridPosition = GameMode->GField->GetXYPositionByRelativeLocation(WhereToGo);
+					}
 				}
 			}
 		}
-
-
-
+		//if (APiece* ToCapture = Cast<APiece>(Hit.GetActor()))
+		//{
+		//	AChessGameMode* GameMode = Cast<AChessGameMode>(GetWorld()->GetAuthGameMode());
+		//	TArray<APiece*> Copy = GameMode->GField->BPieceInGame;
+		//	for (auto ToKill : Copy)
+		//	{
+		//		if (ToKill->PieceGridPosition == MoveTo->GetGridPosition())
+		//		{
+		//			GameMode->GField->BPieceInGame.Remove(ToKill);
+		//			ToKill->Destroy();
+		//		}
+		//	}
+		//}
 	}
 }
 

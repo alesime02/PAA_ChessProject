@@ -17,7 +17,8 @@ AGameField::AGameField()
 	// pawns dimendion
 	PieceSize = 110;
 
-	FieldStatus = "rnbqkbnr/pppppppp/8/3Q4/8/8/PPPPPPPP/RNBQKBNR";
+	//FieldStatus = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+	FieldStatus = "8/8/8/4r3/8/3BR3/r7/4K3";
 }
 
 // Called when the game starts or when spawned
@@ -157,16 +158,16 @@ void AGameField::SpawnPawns()
 			}
 			if (Character == 'K')
 			{
-				AChessKing* Obj = GetWorld()->SpawnActor<AChessKing>(KingClass, Location, FRotator::ZeroRotator);
+				//AChessKing* Obj = GetWorld()->SpawnActor<AChessKing>(KingClass, Location, FRotator::ZeroRotator);
 				//const float PieceScale = PieceSize / 100;
-				Obj->SetActorScale3D(FVector(PieceScale, PieceScale, 0.2));
-				Obj->SetGridPosition(NewX, NewY);
+				WhiteKing = GetWorld()->SpawnActor<AChessKing>(KingClass, Location, FRotator::ZeroRotator);
+				WhiteKing->SetActorScale3D(FVector(PieceScale, PieceScale, 0.2));
+				WhiteKing->SetGridPosition(NewX, NewY);
 				ATile* Position = TileMap[FVector2D(NewX, NewY)];
 				Position->SetTileStatus(EStatus::WHITEOCCUPIED);
 				Position->SetOccupier(Character);
-				WhiteKing = Obj;
 				NewY += 1;
-				WPieceInGame.Add(Obj);
+				WPieceInGame.Add(WhiteKing);
 			}
 			if (Character == 'P')
 			{
@@ -257,21 +258,20 @@ void AGameField::SpawnPawns()
 			}
 			if (Character == 'k')
 			{
-				AChessKing* Obj = GetWorld()->SpawnActor<AChessKing>(KingClass, Location, FRotator::ZeroRotator);
+				BlackKing = GetWorld()->SpawnActor<AChessKing>(KingClass, Location, FRotator::ZeroRotator);
 				//const float PieceScale = PieceSize / 100;
-				Obj->SetActorScale3D(FVector(PieceScale, PieceScale, 0.2));
-				Obj->SetGridPosition(NewX, NewY);
-				Obj->ChangeBitColor();
+				BlackKing->SetActorScale3D(FVector(PieceScale, PieceScale, 0.2));
+				BlackKing->SetGridPosition(NewX, NewY);
+				BlackKing->ChangeBitColor();
 				FString MaterialPath = TEXT("/Game/Materials/M_Bking");
 				UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(NULL, nullptr, *MaterialPath));
-				UStaticMeshComponent* Comp = Obj->GetStatMeshComp();
+				UStaticMeshComponent* Comp = BlackKing->GetStatMeshComp();
 				Comp->SetMaterial(0, Material);
 				ATile* Position = TileMap[FVector2D(NewX, NewY)];
 				Position->SetTileStatus(EStatus::BLACKOCCUPIED);
 				Position->SetOccupier(Character);
-				BlackKing = Obj;
 				NewY += 1;
-				BPieceInGame.Add(Obj);
+				BPieceInGame.Add(BlackKing);
 			}
 			if (Character == 'p')
 			{

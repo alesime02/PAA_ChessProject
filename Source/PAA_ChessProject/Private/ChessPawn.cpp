@@ -27,6 +27,7 @@ UStaticMeshComponent* AChessPawn::GetStatMeshComp()
 
 void AChessPawn::PossibleMoves(AGameField* Field)
 {
+	Moves.Empty();
 	const double StartX = this->PieceGridPosition[0];
 	const double StartY = this->PieceGridPosition[1];
 	if (this->BitColor == 0 && StartX < 7) 

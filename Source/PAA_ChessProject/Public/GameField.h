@@ -36,16 +36,19 @@ public:
 	TMap<FVector2D, ATile*> TileMap;
 
 	UPROPERTY(Transient)
+	TMap<FVector2D, APiece*> PieceMap;
+
+	UPROPERTY(Transient)
 	TArray<APiece*> WPieceInGame;
 
 	UPROPERTY(Transient)
 	TArray<APiece*> BPieceInGame;
 
 	UPROPERTY(Transient)
-	APiece* BlackKing;
+	AChessKing* BlackKing;
 
 	UPROPERTY(Transient)
-	APiece* WhiteKing;
+	AChessKing* WhiteKing;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float NormalizedCellPadding;

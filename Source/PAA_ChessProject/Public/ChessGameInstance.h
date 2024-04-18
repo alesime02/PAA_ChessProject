@@ -15,9 +15,30 @@ class PAA_CHESSPROJECT_API UChessGameInstance : public UGameInstance
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(EditAnywhere)
+	int32 ScoreHumanPlayer = 0;
+
+	// score value for AI player
+	UPROPERTY(EditAnywhere)
+	int32 ScoreAiPlayer = 0;
+
 	// message to show every turn
 	UPROPERTY(EditAnywhere)
 	FString CurrentTurnMessage = "Current Player";
+
+	// increment the score for human player
+	void IncrementScoreHumanPlayer();
+
+	// increment the score for AI player
+	void IncrementScoreAiPlayer();
+
+	// get the score for human player
+	UFUNCTION(BlueprintCallable)
+	int32 GetScoreHumanPlayer();
+
+	// get the score for AI player
+	UFUNCTION(BlueprintCallable)
+	int32 GetScoreAiPlayer();
 
 	// get the current turn message
 	UFUNCTION(BlueprintCallable)

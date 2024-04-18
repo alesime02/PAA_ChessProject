@@ -28,8 +28,9 @@ UStaticMeshComponent* AChessRook::GetStatMeshComp()
 }
 void AChessRook::PossibleMoves(AGameField* Field)
 {
-	double StartX = this->PieceGridPosition[0];
-	double StartY = this->PieceGridPosition[1];
+	Moves.Empty();
+	double StartX = this->PieceGridPosition.X;
+	double StartY = this->PieceGridPosition.Y;
 	EStatus EnemyStatus;
 	TArray<FVector2D> Directions = { FVector2D(1,0), FVector2D(-1,0), FVector2D(0,1), FVector2D(0,-1) };
 	if (this->BitColor == 0)

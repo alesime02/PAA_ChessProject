@@ -27,6 +27,7 @@ UStaticMeshComponent* AChessBishop::GetStatMeshComp()
 
 void AChessBishop::PossibleMoves(AGameField* Field)
 {
+	Moves.Empty();
 	double StartX = this->PieceGridPosition[0];
 	double StartY = this->PieceGridPosition[1];
 	EStatus EnemyStatus;
