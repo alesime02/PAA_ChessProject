@@ -52,6 +52,7 @@ void AHumanPlayer::OnWin()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("You Win!"));
 	GameInstance->SetTurnMessage(TEXT("Human Wins!"));
+	GameInstance->IncrementScoreHumanPlayer();
 }
 
 void AHumanPlayer::OnLose()
@@ -70,37 +71,19 @@ void AHumanPlayer::OnClick()
 	if (Hit.bBlockingHit && IsMyTurn)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Tocco"));
+		AChessGameMode* GameMode = Cast<AChessGameMode>(GetWorld()->GetAuthGameMode());
 		if (APiece* CurrPiece = Cast<APiece>(Hit.GetActor()))
 		{
 			if (CurrPiece->BitColor == 0)
 			{
-				AChessGameMode* GameMode = Cast<AChessGameMode>(GetWorld()->GetAuthGameMode());
+				//AChessGameMode* GameMode = Cast<AChessGameMode>(GetWorld()->GetAuthGameMode());
 				if (ClickBit) 
 				{
-					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Decoloring Tiles"));
-					for (auto i : GameMode->GField->TileArray) 
-					{
-						FVector2D Coordinates = i->GetGridPosition();
-						int32 x = Coordinates.X;
-						int32 y = Coordinates.Y;
-						if (((x + y) % 2) == 0)
-						{
-							FString MaterialPath = TEXT("/Game/Materials/MI_Black");
-							UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(NULL, nullptr, *MaterialPath));
-							UStaticMeshComponent* Comp = i->GetStatMeshComp();
-							Comp->SetMaterial(0, Material);
-						}
-						else
-						{
-							FString MaterialPath = TEXT("/Game/Materials/MI_White");
-							UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(NULL, nullptr, *MaterialPath));
-							UStaticMeshComponent* Comp = i->GetStatMeshComp();
-							Comp->SetMaterial(0, Material);
-						}
-						ClickBit = false;
-					}
+					//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Decoloring Tiles"));
+					DecoloringTiles(GameMode);
+					ClickBit = false;
 				}
-				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("calcola mosse"));
+				//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("calcola mosse"));
 				GameMode->LegalMoves(CurrPiece);
 				PieceToMove = CurrPiece;
 				ClickBit = true;
@@ -108,7 +91,7 @@ void AHumanPlayer::OnClick()
 		}
 		if (ATile* MoveTo = Cast<ATile>(Hit.GetActor()))
 		{
-			AChessGameMode* GameMode = Cast<AChessGameMode>(GetWorld()->GetAuthGameMode());
+			//AChessGameMode* GameMode = Cast<AChessGameMode>(GetWorld()->GetAuthGameMode());
 			if (PieceToMove != nullptr) 
 			{
 				for (auto iterator : PieceToMove->Moves) 
@@ -123,23 +106,76 @@ void AHumanPlayer::OnClick()
 						FVector WhereToGo = GameMode->GField->GetPieceRelativeLocationByXYPosition(x,y);
 						PieceToMove->SetActorLocation(WhereToGo);
 						PieceToMove->PieceGridPosition = GameMode->GField->GetXYPositionByRelativeLocation(WhereToGo);
+						DecoloringTiles(GameMode);
+						GameMode->IsPair(GameMode->GField->BPieceInGame);
+						GameMode->IsCheck(PieceToMove, GameMode->GField->BlackKing, GameMode->GField->BPieceInGame);
+						IsMyTurn = false;
+						GameMode->TurnNextPlayer();
 					}
 				}
 			}
 		}
-		//if (APiece* ToCapture = Cast<APiece>(Hit.GetActor()))
-		//{
-		//	AChessGameMode* GameMode = Cast<AChessGameMode>(GetWorld()->GetAuthGameMode());
-		//	TArray<APiece*> Copy = GameMode->GField->BPieceInGame;
-		//	for (auto ToKill : Copy)
-		//	{
-		//		if (ToKill->PieceGridPosition == MoveTo->GetGridPosition())
-		//		{
-		//			GameMode->GField->BPieceInGame.Remove(ToKill);
-		//			ToKill->Destroy();
-		//		}
-		//	}
-		//}
+		if (APiece* ToCapture = Cast<APiece>(Hit.GetActor()))
+		{
+			//AChessGameMode* GameMode = Cast<AChessGameMode>(GetWorld()->GetAuthGameMode());
+			if(PieceToMove != nullptr && ToCapture->BitColor == 1)
+			{
+				ATile* MoveTo = GameMode->GField->TileMap[ToCapture->PieceGridPosition];
+				for (auto iterator : PieceToMove->Moves) 
+				{
+					if (MoveTo->GetGridPosition() == iterator) 
+					{
+						ATile* Start = GameMode->GField->TileMap[PieceToMove->PieceGridPosition];
+						Start->SetTileStatus(EStatus::EMPTY);
+						MoveTo->SetTileStatus(EStatus::WHITEOCCUPIED);
+						TArray<APiece*> Copy = GameMode->GField->BPieceInGame;
+						for (auto ToKill : Copy)
+						{
+							if (ToKill->PieceGridPosition == MoveTo->GetGridPosition())
+							{
+								GameMode->GField->BPieceInGame.Remove(ToKill);
+								ToKill->Destroy();
+								break;
+							}
+						}
+						int32 x = MoveTo->GetGridPosition().X;
+						int32 y = MoveTo->GetGridPosition().Y;
+						FVector WhereToGo = GameMode->GField->GetPieceRelativeLocationByXYPosition(x, y);
+						PieceToMove->SetActorLocation(WhereToGo);
+						PieceToMove->PieceGridPosition = GameMode->GField->GetXYPositionByRelativeLocation(WhereToGo);
+						DecoloringTiles(GameMode);
+						GameMode->IsPair(GameMode->GField->BPieceInGame);
+						GameMode->IsCheck(PieceToMove, GameMode->GField->BlackKing, GameMode->GField->BPieceInGame);
+						IsMyTurn = false;
+						GameMode->TurnNextPlayer();
+					}
+				}
+			}
+		}
+	}
+}
+
+void AHumanPlayer::DecoloringTiles(AChessGameMode* GameMode)
+{
+	for (auto i : GameMode->GField->TileArray)
+	{
+		FVector2D Coordinates = i->GetGridPosition();
+		int32 x = Coordinates.X;
+		int32 y = Coordinates.Y;
+		if (((x + y) % 2) == 0)
+		{
+			FString MaterialPath = TEXT("/Game/Materials/MI_Black");
+			UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(NULL, nullptr, *MaterialPath));
+			UStaticMeshComponent* Comp = i->GetStatMeshComp();
+			Comp->SetMaterial(0, Material);
+		}
+		else
+		{
+			FString MaterialPath = TEXT("/Game/Materials/MI_White");
+			UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(NULL, nullptr, *MaterialPath));
+			UStaticMeshComponent* Comp = i->GetStatMeshComp();
+			Comp->SetMaterial(0, Material);
+		}
 	}
 }
 

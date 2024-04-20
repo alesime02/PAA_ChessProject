@@ -56,6 +56,16 @@ void AChessPawn::PossibleMoves(AGameField* Field)
 				Moves.Add(temp);
 			}
 		}
+		if (StartX == 1)
+		{
+			temp.X += 1;
+			temp.Y = StartY;
+			Next = Field->TileMap[(temp)];
+			if (Next->GetTileStatus() == EStatus::EMPTY)
+			{
+				Moves.Add(temp);
+			}
+		}
 	}
 	else if (this->BitColor == 1 && StartX > 0)
 	{
@@ -79,6 +89,16 @@ void AChessPawn::PossibleMoves(AGameField* Field)
 			temp.Y = StartY + 1;
 			ATile* NextRDiagonal = Field->TileMap[(temp)];
 			if (NextRDiagonal->GetTileStatus() == EStatus::WHITEOCCUPIED)
+			{
+				Moves.Add(temp);
+			}
+		}
+		if (StartX == 6)
+		{
+			temp.X -= 1;
+			temp.Y = StartY;
+			Next = Field->TileMap[(temp)];
+			if (Next->GetTileStatus() == EStatus::EMPTY)
 			{
 				Moves.Add(temp);
 			}

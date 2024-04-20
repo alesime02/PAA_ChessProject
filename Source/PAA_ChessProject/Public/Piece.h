@@ -18,18 +18,6 @@ public:
 	// Sets default values for this actor's properties
 	APiece();
 
-	// set the (x, y) position
-	void SetGridPosition(const double InX, const double InY);
-
-	// get the (x, y) position
-	FVector2D GetGridPosition();
-
-	//cambia il colore della pedina
-	void ChangeBitColor();
-
-	// get the piece owner by the color
-	//int32 GetColor();
-
 	// (x, y) position of the tile, aggiunto per i test
 	FVector2D PieceGridPosition;
 
@@ -37,15 +25,11 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<FVector2D> Moves;
 
-	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	USceneComponent* Scene;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	UStaticMeshComponent* StaticMeshComponent;*/
-
 	int32 BitColor = 0;
 
 	virtual void PossibleMoves(AGameField* Field) {};
+
+
 
 protected:
 	// Called when the game starts or when spawned

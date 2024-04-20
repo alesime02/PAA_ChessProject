@@ -5,7 +5,7 @@
 #include "ChessPlayerController.h"
 #include "HumanPlayer.h"
 #include "RandomPlayer.h"
-//#include "TTT_MinimaxPlayer.h"
+//#include "MinimaxPlayer.h"
 #include "EngineUtils.h"
 
 
@@ -18,8 +18,6 @@ AChessGameMode::AChessGameMode()
 void AChessGameMode::BeginPlay()
 {
 	Super::BeginPlay();
-
-	IsGameOver = false;
 
 	AHumanPlayer* HumanPlayer = Cast<AHumanPlayer>(*TActorIterator<AHumanPlayer>(GetWorld()));
 	
@@ -75,88 +73,31 @@ int32 AChessGameMode::GetNextPlayer(int32 Player)
 
 void AChessGameMode::TurnNextPlayer()
 {
-	CurrentPlayer = GetNextPlayer(CurrentPlayer);
-	Players[CurrentPlayer]->OnTurn();
+	if (CheckMate) 
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Scacco Matto"));
+		Players[CurrentPlayer]->OnWin();
+		for (int32 i = 0; i < Players.Num(); i++)
+		{
+			if (i != CurrentPlayer)
+			{
+				Players[i]->OnLose();
+			}
+		}
+	}
+	else if (Pair)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Patta"));
+	}
+	else
+	{
+		CurrentPlayer = GetNextPlayer(CurrentPlayer);
+		Players[CurrentPlayer]->OnTurn();
+	}
 }
 
 void AChessGameMode::FilterIllegals(APiece* Current)
 {
-	//	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("CHIAMATAFUNZIONE"));
-	//	FVector2D KingPosition;
-	//	EStatus EnemyStatus;
-	//	EStatus YourStatus;
-	//	TArray<APiece*> EnemyPieces;
-	//
-	//	if (Current->BitColor == 0)
-	//	{
-	//		KingPosition = GField->WhiteKing->PieceGridPosition;
-	//		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Preso posizione re"));
-	//		EnemyStatus = EStatus::BLACKOCCUPIED;
-	//		YourStatus = EStatus::WHITEOCCUPIED;
-	//		EnemyPieces = GField->BPieceInGame;
-	//	}
-	//	else
-	//	{
-	//		KingPosition = GField->BlackKing->PieceGridPosition;
-	//		EnemyStatus = EStatus::WHITEOCCUPIED;
-	//		YourStatus = EStatus::BLACKOCCUPIED;
-	//		EnemyPieces = GField->WPieceInGame;
-	//	}
-	//	bool MovingKing = false;
-	//	if (Current->PieceGridPosition == KingPosition)
-	//	{
-	//		MovingKing = true;
-	//	}
-	//	TArray<FVector2D> ActualMoves = Current->Moves;
-	//	FVector2D ToNotCount(-1, -1);
-	//	// scorro le mosse possibili della pedina che ho cliccato
-	//	for (auto i : Current->Moves)
-	//	{
-	//		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Scorro Mosse Pedina cliccata"));
-	//		ATile* Start = GField->TileMap[Current->PieceGridPosition];
-	//		//simulo la mossa
-	//		if (MovingKing)
-	//		{
-	//			KingPosition = i;
-	//		}
-	//		Start->SetTileStatus(EStatus::EMPTY);
-	//		ATile* End = GField->TileMap[i];
-	//		EStatus Previous = End->GetTileStatus();
-	//		if (Previous == EnemyStatus)
-	//		{
-	//			ToNotCount = End->GetGridPosition();
-	//		}
-	//		End->SetTileStatus(YourStatus);
-	//		//calcolo contromosse dei pezzi nemici
-	//		bool loopBreaker = false;
-	//		for (auto Piece : GField->WPieceInGame)
-	//		{
-	//			if (loopBreaker)
-	//			{
-	//				break;
-	//			}
-	//			if (Piece->PieceGridPosition == ToNotCount) continue;
-	//	
-	//			Piece->PossibleMoves(GField);
-	//			for (auto EnemyMove : Piece->Moves)
-	//			{
-	//				if (EnemyMove == KingPosition)
-	//				{
-	//					ActualMoves.Remove(i);
-	//					loopBreaker = true;
-	//					break;
-	//				}
-	//			}
-	//	
-	//		}
-	//		Start->SetTileStatus(YourStatus);
-	//		End->SetTileStatus(Previous);
-	//		ToNotCount.X = -1;
-	//		ToNotCount.Y = -1;
-	//	}
-	//	Current->Moves = ActualMoves;
-	//}
-	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("CHIAMATAFUNZIONE"));
 	if (Current->BitColor == 0)
 	{
 		FVector2D KingPosition = GField->WhiteKing->PieceGridPosition;
@@ -276,136 +217,64 @@ void AChessGameMode::FilterIllegals(APiece* Current)
 	}
 }
 
-
-
-	//if (Current->BitColor == 0) 
-	//{
-	//	FVector2D KingPosition;
-	//	FVector2D ToNotCount;
-	//	//APiece* Eaten = nullptr;
-	//	int32 MovingKing = 0;
-	//	TArray<FVector2D> ActualMoves = Current->Moves;
-	//	int32 Iterator = 0;
-	//	for (int32 i = 0; i < Current->Moves.Num(); i++) 
-	//	{
-	//		if (Current != GField->WhiteKing) 
-	//		{
-	//			KingPosition = GField->WhiteKing->PieceGridPosition;
-	//		}
-	//		else
-	//		{
-	//			KingPosition = Current->Moves[i];
-	//			MovingKing = 1;
-	//		}
-	//		ATile* Start = GField->TileMap[(Current->PieceGridPosition)];
-	//		Start->SetTileStatus(EStatus::EMPTY);
-	//		ATile* End = GField->TileMap[(Current->Moves[i])];
-	//		EStatus Previous = End->GetTileStatus();
-	//		if (Previous == EStatus::BLACKOCCUPIED)
-	//		{
-	//			 FVector2D EndXY = End->GetGridPosition();
-	//			 ToNotCount.X = EndXY.X;
-	//			 ToNotCount.Y = EndXY.Y;
-	//			//Eaten = GField->PieceMap[(End->GetGridPosition())];
-	//			/*if (GField->PieceMap.Find(End->GetGridPosition()) != nullptr) 
-	//			{
-	//				Eaten = GField->PieceMap[(End->GetGridPosition())];
-	//			}*/
-	//		}
-	//		End->SetTileStatus(EStatus::WHITEOCCUPIED);
-	//		for (int32 j = 0; j < GField->BPieceInGame.Num(); j++) 
-	//		{
-	//			if (GField->BPieceInGame[j]->PieceGridPosition == ToNotCount) 
-	//			{
-	//				continue;
-	//			}
-	//			/*if (Eaten != nullptr) 
-	//			{
-	//				if (GField->BPieceInGame[j] == Eaten)
-	//				{
-	//					continue;
-	//				}
-	//			}*/
-	//			else 
-	//			{
-	//				APiece* Curr = GField->BPieceInGame[j];
-	//				Curr->PossibleMoves(GField);
-	//				for (int32 k = 0; k < Curr->Moves.Num(); k++)
-	//				{
-	//					if (Curr->Moves[k] == KingPosition)
-	//					{
-	//						ActualMoves.RemoveAt(Iterator);
-	// 
-	//						break;
-	//					}
-	//					else 
-	//					{
-	//						Iterator += 1;
-	//					}
-	//				}
-	//				Start->SetTileStatus(EStatus::WHITEOCCUPIED);
-	//				End->SetTileStatus(Previous);
-	//				ToNotCount.X = Current->PieceGridPosition.X;
-	//				ToNotCount.Y = Current->PieceGridPosition.Y;
-	//				if (MovingKing == 1) 
-	//				{
-	//					KingPosition = GField->WhiteKing->PieceGridPosition;
-	//				}
-	//			}
-	//				
-	//		}
-	//	}
-	//}
-	/*else
+void AChessGameMode::IsCheck(APiece* Current, AChessKing* EnemyKing, TArray<APiece*> EnemyPieces)
+{
+	Current->PossibleMoves(GField);
+	for (auto PossibleMove : Current->Moves)
 	{
-		FVector2D KingPosition;
-		for (int32 i = 0; i < Current->Moves.Num(); i++)
+		if (PossibleMove == EnemyKing->PieceGridPosition)
 		{
-			if (Current != GField->BlackKing)
+			for (auto Enemy : EnemyPieces) 
 			{
-				KingPosition = GField->BlackKing->PieceGridPosition;
-			}
-			else
-			{
-				KingPosition = Current->Moves[i];
-			}
-			ATile* Start = GField->TileMap[(Current->PieceGridPosition)];
-			Start->SetTileStatus(EStatus::EMPTY);
-			ATile* End = GField->TileMap[(Current->Moves[i])];
-			EStatus Previous = End->GetTileStatus();
-			End->SetTileStatus(EStatus::BLACKOCCUPIED);
-			for (int32 j = 0; j < GField->WPieceInGame.Num(); j++)
-			{
-				APiece* Curr = GField->WPieceInGame[j];
-				Curr->PossibleMoves(GField);
-				for (int32 k = 0; k < Curr->Moves.Num(); k++)
+				LegalMoves(Enemy);
+				if (!Enemy->Moves.IsEmpty()) 
 				{
-					if (Curr->Moves[k] == KingPosition)
-					{
-						Current->Moves.RemoveAt(i);
-					}
+					break;
 				}
-				Start->SetTileStatus(EStatus::BLACKOCCUPIED);
-				End->SetTileStatus(Previous);
-			}
+				if (Enemy == EnemyPieces.Last() && Enemy->Moves.IsEmpty()) 
+				{
+					CheckMate = true;
+				}
+			}		
 		}
-	}*/
-//}
+	}
 
+}
+
+void AChessGameMode::IsPair(TArray<APiece*> EnemyPieces)
+{
+	for (auto Enemy : EnemyPieces)
+	{
+		LegalMoves(Enemy);
+		if (!Enemy->Moves.IsEmpty())
+		{
+			break;
+		}
+		if (Enemy == EnemyPieces.Last() && Enemy->Moves.IsEmpty())
+		{
+			Pair = true;
+		}
+	}
+}
+
+
+
+	
 
 void AChessGameMode::LegalMoves(APiece* Current)
 {
-	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("CHIAMATA PossibleMoves"));
 	Current->PossibleMoves(GField);
-	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("CHIAMATA Filterillegals"));
 	FilterIllegals(Current);
-	for (auto i : Current->Moves) 
+	if (Current->BitColor == 0) 
 	{
-		ATile* LegalTile = GField->TileMap[i];
-		FString MaterialPath = TEXT("/Game/Materials/MI_LegalMove");
-		UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(NULL, nullptr, *MaterialPath));
-		UStaticMeshComponent* Comp = LegalTile->GetStatMeshComp();
-		Comp->SetMaterial(0, Material);
+		for (auto i : Current->Moves)
+		{
+			ATile* LegalTile = GField->TileMap[i];
+			FString MaterialPath = TEXT("/Game/Materials/MI_LegalMove");
+			UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(NULL, nullptr, *MaterialPath));
+			UStaticMeshComponent* Comp = LegalTile->GetStatMeshComp();
+			Comp->SetMaterial(0, Material);
+		}
 	}
 }
 

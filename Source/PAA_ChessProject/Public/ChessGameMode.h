@@ -17,9 +17,7 @@ class PAA_CHESSPROJECT_API AChessGameMode : public AGameModeBase
 	GENERATED_BODY()
 	
 public:
-	// tracks if the game is over
-	bool IsGameOver;
-
+	
 	TArray<IPlayerInterface*> Players;
 
 	int32 CurrentPlayer;
@@ -30,6 +28,12 @@ public:
 	// reference to a GameField object
 	UPROPERTY(VisibleAnywhere)
 	AGameField* GField;
+
+	UPROPERTY(Transient)
+	bool CheckMate = false;	
+
+	UPROPERTY(Transient)
+	bool Pair = false;
 
 	AChessGameMode();
 
@@ -48,4 +52,8 @@ public:
 	void LegalMoves(APiece* Current);
 
 	void FilterIllegals(APiece* Current);
+
+	void IsCheck(APiece* Current, AChessKing* EnemyKing, TArray<APiece*> EnemyPieces);
+
+	void IsPair(TArray<APiece*> EnemyPieces);
 };

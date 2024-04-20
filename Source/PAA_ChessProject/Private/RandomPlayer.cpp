@@ -36,13 +36,72 @@ void ARandomPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 void ARandomPlayer::OnTurn()
 {
-
+	GameInstance->SetTurnMessage(TEXT("AI (Random) Turn"));
+	FTimerHandle TimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, [&]()
+	{
+		AChessGameMode* GameMode = Cast<AChessGameMode>(GetWorld()->GetAuthGameMode());
+		int32 RandPiece = FMath::Rand() % GameMode->GField->BPieceInGame.Num();
+		GameMode->LegalMoves(GameMode->GField->BPieceInGame[RandPiece]);
+		for (auto PieceIdx : GameMode->GField->BPieceInGame)
+		{
+			if (GameMode->GField->BPieceInGame[RandPiece]->Moves.IsEmpty())
+			{
+				RandPiece = (RandPiece + 1) % GameMode->GField->BPieceInGame.Num();
+				GameMode->LegalMoves(GameMode->GField->BPieceInGame[RandPiece]);
+			}
+			else
+			{
+				break;
+			}
+		}
+		APiece* MovingPiece = GameMode->GField->BPieceInGame[RandPiece];
+		int32 RandMove = FMath::Rand() % GameMode->GField->BPieceInGame[RandPiece]->Moves.Num();
+		ATile* Start = GameMode->GField->TileMap[MovingPiece->PieceGridPosition];
+		Start->SetTileStatus(EStatus::EMPTY);
+		ATile* End = GameMode->GField->TileMap[MovingPiece->Moves[RandMove]];
+		if (End->GetTileStatus() == EStatus::EMPTY)
+		{
+			End->SetTileStatus(EStatus::BLACKOCCUPIED);
+			int32 x = End->GetGridPosition().X;
+			int32 y = End->GetGridPosition().Y;
+			FVector WhereToGo = GameMode->GField->GetPieceRelativeLocationByXYPosition(x, y);
+			MovingPiece->SetActorLocation(WhereToGo);
+			MovingPiece->PieceGridPosition = GameMode->GField->GetXYPositionByRelativeLocation(WhereToGo);
+			GameMode->IsCheck(MovingPiece, GameMode->GField->WhiteKing, GameMode->GField->WPieceInGame);
+			GameMode->TurnNextPlayer();
+		}
+		else
+		{
+			End->SetTileStatus(EStatus::BLACKOCCUPIED);
+			TArray<APiece*> Copy = GameMode->GField->WPieceInGame;
+			for (auto ToKill : Copy)
+			{
+				if (ToKill->PieceGridPosition == End->GetGridPosition())
+				{
+					GameMode->GField->WPieceInGame.Remove(ToKill);
+					ToKill->Destroy();
+					break;
+				}
+			}
+			int32 x = End->GetGridPosition().X;
+			int32 y = End->GetGridPosition().Y;
+			FVector WhereToGo = GameMode->GField->GetPieceRelativeLocationByXYPosition(x, y);
+			MovingPiece->SetActorLocation(WhereToGo);
+			MovingPiece->PieceGridPosition = GameMode->GField->GetXYPositionByRelativeLocation(WhereToGo);
+			GameMode->IsPair(GameMode->GField->WPieceInGame);
+			GameMode->IsCheck(MovingPiece, GameMode->GField->WhiteKing, GameMode->GField->WPieceInGame);
+			GameMode->TurnNextPlayer();
+		}
+	
+	}, 2, false);
 }
 
 void ARandomPlayer::OnWin()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("AI (Random) Wins!"));
 	GameInstance->SetTurnMessage(TEXT("AI Wins!"));
+	GameInstance->IncrementScoreAiPlayer();
 }
 
 void ARandomPlayer::OnLose()

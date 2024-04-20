@@ -15,7 +15,7 @@
 
 
 // macro declaration for a dynamic multicast delegate
-//DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnReset);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnReset);
 
 
 UCLASS()
@@ -57,8 +57,8 @@ public:
 
 	// BlueprintAssignable Usable with Multicast Delegates only. Exposes the property for assigning in Blueprints.
 	// declare a variable of type FOnReset (delegate)
-	//UPROPERTY(BlueprintAssignable)
-	//FOnReset OnResetEvent;
+	UPROPERTY(BlueprintAssignable)
+	FOnReset OnResetEvent;
 
 	// size of field
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -131,9 +131,9 @@ public:
 	// return (x,y) position given a relative position
 	FVector2D GetXYPositionByRelativeLocation(const FVector& Location) const;
 
+	void SpawnBlackPiece(APiece* ToSpawn, FString MaterialPath, int32 DestX, int32 DestY, TCHAR id, UStaticMeshComponent* Component);
 
-
-
+	void SpawnWhitePiece(APiece* ToSpawn, int32 DestX, int32 DestY, TCHAR id);
 
 protected:
 	// Called when the game starts or when spawned
