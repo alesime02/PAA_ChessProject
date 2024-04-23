@@ -13,11 +13,6 @@
 #include "GameFramework/Actor.h"
 #include "GameField.generated.h"
 
-
-// macro declaration for a dynamic multicast delegate
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnReset);
-
-
 UCLASS()
 class PAA_CHESSPROJECT_API AGameField : public AActor
 {
@@ -54,11 +49,6 @@ public:
 	float NormalizedCellPadding;
 
 	static const int32 NOT_ASSIGNED = -1;
-
-	// BlueprintAssignable Usable with Multicast Delegates only. Exposes the property for assigning in Blueprints.
-	// declare a variable of type FOnReset (delegate)
-	UPROPERTY(BlueprintAssignable)
-	FOnReset OnResetEvent;
 
 	// size of field
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

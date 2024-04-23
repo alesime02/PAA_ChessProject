@@ -3,6 +3,7 @@
 
 #include "GameField.h"
 #include "ChessGameMode.h"
+#include "HumanPlayer.h"
 
 // Sets default values
 AGameField::AGameField()
@@ -48,29 +49,30 @@ void AGameField::OnConstruction(const FTransform& Transform)
 // DA SISTEMARE!!!
 void AGameField::ResetField()
 {
-	for (ATile* Obj : TileArray)
-	{
-		Obj->SetTileStatus(EStatus::EMPTY);
-	}
-	TArray<APiece*> BPiecesCopy = BPieceInGame;
-	for (APiece* Obj : BPiecesCopy)
-	{
-		BPieceInGame.Remove(Obj);
-	}
-	TArray<APiece*> WPiecesCopy = WPieceInGame;
-	for (APiece* Obj : WPiecesCopy)
-	{
-		WPieceInGame.Remove(Obj);
-	}
+	FTimerHandle TimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, [&]()
+		{
+			for (ATile* Obj : TileArray)
+			{
+				Obj->SetTileStatus(EStatus::EMPTY);
+			}
+			for (APiece* Obj : BPieceInGame)
+			{
+				Obj->Destroy();
+			};
+			BPieceInGame.Empty();
+			for (APiece* Obj : WPieceInGame)
+			{
+				Obj->Destroy();
+			}
+			WPieceInGame.Empty();
 
-	// send broadcast event to registered objects 
-	OnResetEvent.Broadcast();
-
-	AChessGameMode* GameMode = Cast<AChessGameMode>(GetWorld()->GetAuthGameMode());
-	GameMode->CheckMate = false;
-	GameMode->Pair = false;
-	SpawnPawns();
-	GameMode->ChoosePlayerAndStartGame();
+			AChessGameMode* GameMode = Cast<AChessGameMode>(GetWorld()->GetAuthGameMode());
+			GameMode->CheckMate = false;
+			GameMode->Pair = false;
+			SpawnPawns();
+			GameMode->ChoosePlayerAndStartGame();
+		}, 1, false);
 }
 
 

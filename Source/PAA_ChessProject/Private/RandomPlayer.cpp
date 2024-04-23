@@ -68,7 +68,9 @@ void ARandomPlayer::OnTurn()
 			FVector WhereToGo = GameMode->GField->GetPieceRelativeLocationByXYPosition(x, y);
 			MovingPiece->SetActorLocation(WhereToGo);
 			MovingPiece->PieceGridPosition = GameMode->GField->GetXYPositionByRelativeLocation(WhereToGo);
+			GameMode->IsPair(GameMode->GField->WPieceInGame);
 			GameMode->IsCheck(MovingPiece, GameMode->GField->WhiteKing, GameMode->GField->WPieceInGame);
+			GameMode->DecoloringTiles();
 			GameMode->TurnNextPlayer();
 		}
 		else
@@ -91,10 +93,11 @@ void ARandomPlayer::OnTurn()
 			MovingPiece->PieceGridPosition = GameMode->GField->GetXYPositionByRelativeLocation(WhereToGo);
 			GameMode->IsPair(GameMode->GField->WPieceInGame);
 			GameMode->IsCheck(MovingPiece, GameMode->GField->WhiteKing, GameMode->GField->WPieceInGame);
+			GameMode->DecoloringTiles();
 			GameMode->TurnNextPlayer();
 		}
 	
-	}, 2, false);
+	}, 1, false);
 }
 
 void ARandomPlayer::OnWin()

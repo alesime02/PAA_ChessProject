@@ -29,8 +29,6 @@ public:
 
 	virtual void PossibleMoves(AGameField* Field) {};
 
-
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

@@ -47,7 +47,7 @@ void AChessGameMode::BeginPlay()
 	// AI player = 1
 	Players.Add(AI);
 
-	this->ChoosePlayerAndStartGame();
+	ChoosePlayerAndStartGame();
 }
 
 void AChessGameMode::ChoosePlayerAndStartGame()
@@ -257,6 +257,30 @@ void AChessGameMode::IsPair(TArray<APiece*> EnemyPieces)
 	}
 }
 
+void AChessGameMode::DecoloringTiles()
+{
+	for (auto i : GField->TileArray)
+	{
+		FVector2D Coordinates = i->GetGridPosition();
+		int32 x = Coordinates.X;
+		int32 y = Coordinates.Y;
+		if (((x + y) % 2) == 0)
+		{
+			FString MaterialPath = TEXT("/Game/Materials/MI_Black");
+			UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(NULL, nullptr, *MaterialPath));
+			UStaticMeshComponent* Comp = i->GetStatMeshComp();
+			Comp->SetMaterial(0, Material);
+		}
+		else
+		{
+			FString MaterialPath = TEXT("/Game/Materials/MI_White");
+			UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(NULL, nullptr, *MaterialPath));
+			UStaticMeshComponent* Comp = i->GetStatMeshComp();
+			Comp->SetMaterial(0, Material);
+		}
+	}
+}
+
 
 
 	
@@ -277,4 +301,5 @@ void AChessGameMode::LegalMoves(APiece* Current)
 		}
 	}
 }
+
 

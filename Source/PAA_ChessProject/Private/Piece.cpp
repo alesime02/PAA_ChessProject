@@ -2,6 +2,7 @@
 
 
 #include "Piece.h"
+#include "ChessGameMode.h"
 
 // Sets default values
 APiece::APiece()
@@ -15,6 +16,7 @@ APiece::APiece()
 void APiece::BeginPlay()
 {
 	Super::BeginPlay();
+	AChessGameMode* GameMode = Cast<AChessGameMode>(GetWorld()->GetAuthGameMode());
 	
 }
 

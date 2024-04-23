@@ -80,7 +80,7 @@ void AHumanPlayer::OnClick()
 				if (ClickBit) 
 				{
 					//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Decoloring Tiles"));
-					DecoloringTiles(GameMode);
+					GameMode->DecoloringTiles();
 					ClickBit = false;
 				}
 				//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("calcola mosse"));
@@ -106,7 +106,7 @@ void AHumanPlayer::OnClick()
 						FVector WhereToGo = GameMode->GField->GetPieceRelativeLocationByXYPosition(x,y);
 						PieceToMove->SetActorLocation(WhereToGo);
 						PieceToMove->PieceGridPosition = GameMode->GField->GetXYPositionByRelativeLocation(WhereToGo);
-						DecoloringTiles(GameMode);
+						GameMode->DecoloringTiles();
 						GameMode->IsPair(GameMode->GField->BPieceInGame);
 						GameMode->IsCheck(PieceToMove, GameMode->GField->BlackKing, GameMode->GField->BPieceInGame);
 						IsMyTurn = false;
@@ -143,7 +143,7 @@ void AHumanPlayer::OnClick()
 						FVector WhereToGo = GameMode->GField->GetPieceRelativeLocationByXYPosition(x, y);
 						PieceToMove->SetActorLocation(WhereToGo);
 						PieceToMove->PieceGridPosition = GameMode->GField->GetXYPositionByRelativeLocation(WhereToGo);
-						DecoloringTiles(GameMode);
+						GameMode->DecoloringTiles();
 						GameMode->IsPair(GameMode->GField->BPieceInGame);
 						GameMode->IsCheck(PieceToMove, GameMode->GField->BlackKing, GameMode->GField->BPieceInGame);
 						IsMyTurn = false;
@@ -151,30 +151,6 @@ void AHumanPlayer::OnClick()
 					}
 				}
 			}
-		}
-	}
-}
-
-void AHumanPlayer::DecoloringTiles(AChessGameMode* GameMode)
-{
-	for (auto i : GameMode->GField->TileArray)
-	{
-		FVector2D Coordinates = i->GetGridPosition();
-		int32 x = Coordinates.X;
-		int32 y = Coordinates.Y;
-		if (((x + y) % 2) == 0)
-		{
-			FString MaterialPath = TEXT("/Game/Materials/MI_Black");
-			UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(NULL, nullptr, *MaterialPath));
-			UStaticMeshComponent* Comp = i->GetStatMeshComp();
-			Comp->SetMaterial(0, Material);
-		}
-		else
-		{
-			FString MaterialPath = TEXT("/Game/Materials/MI_White");
-			UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(NULL, nullptr, *MaterialPath));
-			UStaticMeshComponent* Comp = i->GetStatMeshComp();
-			Comp->SetMaterial(0, Material);
 		}
 	}
 }

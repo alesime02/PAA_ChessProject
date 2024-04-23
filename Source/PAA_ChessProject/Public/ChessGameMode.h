@@ -56,4 +56,7 @@ public:
 	void IsCheck(APiece* Current, AChessKing* EnemyKing, TArray<APiece*> EnemyPieces);
 
 	void IsPair(TArray<APiece*> EnemyPieces);
+
+	void DecoloringTiles();
 };
+

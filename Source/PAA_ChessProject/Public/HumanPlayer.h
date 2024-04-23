@@ -53,6 +53,4 @@ public:
 	UFUNCTION()
 	void OnClick();
 
-	void DecoloringTiles(AChessGameMode* GameMode);
-
 };
