@@ -5,7 +5,6 @@
 #include "ChessPlayerController.h"
 #include "HumanPlayer.h"
 #include "RandomPlayer.h"
-//#include "MinimaxPlayer.h"
 #include "EngineUtils.h"
 
 
@@ -41,11 +40,8 @@ void AChessGameMode::BeginPlay()
 	// Random Player
 	auto* AI = GetWorld()->SpawnActor<ARandomPlayer>(FVector(), FRotator());
 
-	// MiniMax Player
-	//auto* AI = GetWorld()->SpawnActor<ATTT_MinimaxPlayer>(FVector(), FRotator());
-
 	// AI player = 1
-	Players.Add(AI);
+	Players.Add(AI) ;
 
 	ChoosePlayerAndStartGame();
 }

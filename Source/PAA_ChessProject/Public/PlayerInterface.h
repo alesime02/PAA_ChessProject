@@ -24,6 +24,8 @@ class PAA_CHESSPROJECT_API IPlayerInterface
 public:
 	int32 PlayerNumber;
 
+	bool Working;
+	
 	virtual void OnTurn() {};
 	virtual void OnWin() {};
 	virtual void OnLose() {};

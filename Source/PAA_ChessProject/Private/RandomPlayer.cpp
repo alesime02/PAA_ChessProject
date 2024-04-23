@@ -37,9 +37,11 @@ void ARandomPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 void ARandomPlayer::OnTurn()
 {
 	GameInstance->SetTurnMessage(TEXT("AI (Random) Turn"));
+	Working = true;
 	FTimerHandle TimerHandle;
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, [&]()
 	{
+
 		AChessGameMode* GameMode = Cast<AChessGameMode>(GetWorld()->GetAuthGameMode());
 		int32 RandPiece = FMath::Rand() % GameMode->GField->BPieceInGame.Num();
 		GameMode->LegalMoves(GameMode->GField->BPieceInGame[RandPiece]);
@@ -97,7 +99,8 @@ void ARandomPlayer::OnTurn()
 			GameMode->TurnNextPlayer();
 		}
 	
-	}, 1, false);
+	}, 2, false);
+	Working = false;
 }
 
 void ARandomPlayer::OnWin()

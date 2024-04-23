@@ -49,30 +49,35 @@ void AGameField::OnConstruction(const FTransform& Transform)
 // DA SISTEMARE!!!
 void AGameField::ResetField()
 {
-	FTimerHandle TimerHandle;
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, [&]()
+	AChessGameMode* GameMode = Cast<AChessGameMode>(GetWorld()->GetAuthGameMode());
+	if (GameMode->CurrentPlayer != 0) 
+	{
+		 UChessGameInstance* GameInstance = Cast<UChessGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+		 GameInstance->SetTurnMessage(TEXT("Wait your turn to reset"));
+	}
+	else
+	{
+		for (ATile* Obj : TileArray)
 		{
-			for (ATile* Obj : TileArray)
-			{
-				Obj->SetTileStatus(EStatus::EMPTY);
-			}
-			for (APiece* Obj : BPieceInGame)
-			{
-				Obj->Destroy();
-			};
-			BPieceInGame.Empty();
-			for (APiece* Obj : WPieceInGame)
-			{
-				Obj->Destroy();
-			}
-			WPieceInGame.Empty();
+			Obj->SetTileStatus(EStatus::EMPTY);
+		}
+		for (APiece* Obj : BPieceInGame)
+		{
+			Obj->Destroy();
+		};
+		BPieceInGame.Empty();
+		for (APiece* Obj : WPieceInGame)
+		{
+			Obj->Destroy();
+		}
+		WPieceInGame.Empty();
 
-			AChessGameMode* GameMode = Cast<AChessGameMode>(GetWorld()->GetAuthGameMode());
-			GameMode->CheckMate = false;
-			GameMode->Pair = false;
-			SpawnPawns();
-			GameMode->ChoosePlayerAndStartGame();
-		}, 1, false);
+		GameMode->CheckMate = false;
+		GameMode->Pair = false;
+		SpawnPawns();
+		GameMode->ChoosePlayerAndStartGame();
+
+	}
 }
 
 
