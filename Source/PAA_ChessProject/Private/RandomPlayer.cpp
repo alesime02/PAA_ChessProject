@@ -71,14 +71,14 @@ void ARandomPlayer::OnTurn()
 			FVector WhereToGo = GameMode->GField->GetPieceRelativeLocationByXYPosition(x, y);
 			MovingPiece->SetActorLocation(WhereToGo);
 			MovingPiece->PieceGridPosition = GameMode->GField->GetXYPositionByRelativeLocation(WhereToGo);
+			GameMode->CreateCurrentMove(Start, End, MovingPiece, '-');
+			GameMode->IsPair(GameMode->GField->WPieceInGame);
+			GameMode->IsCheck(MovingPiece, GameMode->GField->WhiteKing, GameMode->GField->WPieceInGame);
 			auto PC = Cast<AChessPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
 			if (PC)
 			{
 				PC->SpawnButtonEvent.Broadcast();
 			}
-			GameMode->IsPair(GameMode->GField->WPieceInGame);
-			GameMode->IsCheck(MovingPiece, GameMode->GField->WhiteKing, GameMode->GField->WPieceInGame);
-			GameMode->CreateCurrentMove(Start, End, MovingPiece, '-');
 			GameMode->DecoloringTiles();
 			GameMode->TurnNextPlayer();
 		}
@@ -100,14 +100,14 @@ void ARandomPlayer::OnTurn()
 			FVector WhereToGo = GameMode->GField->GetPieceRelativeLocationByXYPosition(x, y);
 			MovingPiece->SetActorLocation(WhereToGo);
 			MovingPiece->PieceGridPosition = GameMode->GField->GetXYPositionByRelativeLocation(WhereToGo);
+			GameMode->CreateCurrentMove(Start, End, MovingPiece, 'x');
+			GameMode->IsPair(GameMode->GField->WPieceInGame);
+			GameMode->IsCheck(MovingPiece, GameMode->GField->WhiteKing, GameMode->GField->WPieceInGame);
 			auto PC = Cast<AChessPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
 			if (PC)
 			{
 				PC->SpawnButtonEvent.Broadcast();
 			}
-			GameMode->IsPair(GameMode->GField->WPieceInGame);
-			GameMode->IsCheck(MovingPiece, GameMode->GField->WhiteKing, GameMode->GField->WPieceInGame);
-			GameMode->CreateCurrentMove(Start, End, MovingPiece, 'x');
 			GameMode->DecoloringTiles();
 			GameMode->TurnNextPlayer();
 		}

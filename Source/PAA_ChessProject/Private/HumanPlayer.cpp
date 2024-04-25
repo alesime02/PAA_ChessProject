@@ -107,15 +107,16 @@ void AHumanPlayer::OnClick()
 						FVector WhereToGo = GameMode->GField->GetPieceRelativeLocationByXYPosition(x,y);
 						PieceToMove->SetActorLocation(WhereToGo);
 						PieceToMove->PieceGridPosition = GameMode->GField->GetXYPositionByRelativeLocation(WhereToGo);
+						GameMode->DecoloringTiles();
+						GameMode->CreateCurrentMove(Start, MoveTo, PieceToMove, '-');
+						GameMode->IsPair(GameMode->GField->BPieceInGame);
+						GameMode->IsCheck(PieceToMove, GameMode->GField->BlackKing, GameMode->GField->BPieceInGame);
 						auto PC = Cast<AChessPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
 						if (PC)
 						{
 							PC->SpawnButtonEvent.Broadcast();
 						}
-						GameMode->DecoloringTiles();
-						GameMode->IsPair(GameMode->GField->BPieceInGame);
-						GameMode->IsCheck(PieceToMove, GameMode->GField->BlackKing, GameMode->GField->BPieceInGame);
-						GameMode->CreateCurrentMove(Start, MoveTo, PieceToMove, '-');
+						
 						IsMyTurn = false;
 						GameMode->TurnNextPlayer();
 					}
@@ -151,15 +152,15 @@ void AHumanPlayer::OnClick()
 						FVector WhereToGo = GameMode->GField->GetPieceRelativeLocationByXYPosition(x, y);
 						PieceToMove->SetActorLocation(WhereToGo);
 						PieceToMove->PieceGridPosition = GameMode->GField->GetXYPositionByRelativeLocation(WhereToGo);
+						GameMode->DecoloringTiles();
+						GameMode->CreateCurrentMove(Start, MoveTo, PieceToMove, 'x');
+						GameMode->IsPair(GameMode->GField->BPieceInGame);
+						GameMode->IsCheck(PieceToMove, GameMode->GField->BlackKing, GameMode->GField->BPieceInGame);
 						auto PC = Cast<AChessPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
-						if (PC) 
+						if (PC)
 						{
 							PC->SpawnButtonEvent.Broadcast();
 						}
-						GameMode->DecoloringTiles();
-						GameMode->IsPair(GameMode->GField->BPieceInGame);
-						GameMode->IsCheck(PieceToMove, GameMode->GField->BlackKing, GameMode->GField->BPieceInGame);
-						GameMode->CreateCurrentMove(Start, MoveTo, PieceToMove, 'x');
 						IsMyTurn = false;
 						GameMode->TurnNextPlayer();
 					}

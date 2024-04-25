@@ -17,8 +17,6 @@ AChessQueen::AChessQueen()
 	// every actor has a RootComponent that defines the transform in the World
 	SetRootComponent(Scene);
 	StaticMeshComponent->SetupAttachment(Scene);
-
-	Id = 'Q';
 }
 
 UStaticMeshComponent* AChessQueen::GetStatMeshComp()

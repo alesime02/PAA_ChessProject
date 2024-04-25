@@ -17,9 +17,6 @@ AChessKnight::AChessKnight()
 	// every actor has a RootComponent that defines the transform in the World
 	SetRootComponent(Scene);
 	StaticMeshComponent->SetupAttachment(Scene);
-
-	Id = 'N';
-
 }
 
 UStaticMeshComponent* AChessKnight::GetStatMeshComp()

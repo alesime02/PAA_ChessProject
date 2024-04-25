@@ -20,7 +20,7 @@ AGameField::AGameField()
 	PieceSize = 100;
 
 	FieldStatus = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
-	//FieldStatus = "8/2Q5/8/5K1k/8/8/8/8";
+	//FieldStatus = "4k3/2Q5/R7/5K2/8/8/8/8";
 }
 
 // Called when the game starts or when spawned
@@ -60,6 +60,7 @@ void AGameField::ResetField()
 		for (ATile* Obj : TileArray)
 		{
 			Obj->SetTileStatus(EStatus::EMPTY);
+			Obj->SetOccupier(' ');
 		}
 		for (APiece* Obj : BPieceInGame)
 		{
@@ -282,6 +283,7 @@ void AGameField::SpawnWhitePiece(APiece* ToSpawn, int32 DestX, int32 DestY, TCHA
 	ToSpawn->SetActorScale3D(FVector(PieceScale, PieceScale, 0.2));
 	ToSpawn->PieceGridPosition.X = DestX;
 	ToSpawn->PieceGridPosition.Y = DestY;
+	ToSpawn->Id = id;
 	ATile* Position = TileMap[FVector2D(DestX, DestY)];
 	Position->SetTileStatus(EStatus::WHITEOCCUPIED);
 	Position->SetOccupier(id);

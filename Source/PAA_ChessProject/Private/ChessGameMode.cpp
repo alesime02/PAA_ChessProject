@@ -97,10 +97,10 @@ void AChessGameMode::FilterIllegals(APiece* Current)
 	if (Current->BitColor == 0)
 	{
 		FVector2D KingPosition = GField->WhiteKing->PieceGridPosition;
-		bool MovingKing = 0;
+		bool MovingKing = false;
 		if (Current->PieceGridPosition == KingPosition)
 		{
-			MovingKing = 1;
+			MovingKing = true;
 		}
 		TArray<FVector2D> ActualMoves = Current->Moves;
 		FVector2D ToNotCount(-1, -1);
@@ -156,10 +156,10 @@ void AChessGameMode::FilterIllegals(APiece* Current)
 	else
 	{
 		FVector2D KingPosition = GField->BlackKing->PieceGridPosition;
-		bool MovingKing = 0;
+		bool MovingKing = false;
 		if (Current->PieceGridPosition == KingPosition)
 		{
-			MovingKing = 1;
+			MovingKing = true;
 		}
 		TArray<FVector2D> ActualMoves = Current->Moves;
 		FVector2D ToNotCount(-1, -1);
@@ -216,10 +216,18 @@ void AChessGameMode::FilterIllegals(APiece* Current)
 void AChessGameMode::IsCheck(APiece* Current, AChessKing* EnemyKing, TArray<APiece*> EnemyPieces)
 {
 	Current->PossibleMoves(GField);
-	for (auto PossibleMove : Current->Moves)
+	TArray<FVector2D> CopyOfMoves = Current->Moves;
+	for (auto PossibleMove : CopyOfMoves)
 	{
 		if (PossibleMove == EnemyKing->PieceGridPosition)
 		{
+			/*auto GameInstance = Cast<UChessGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+			if (GameInstance)
+			{
+				FString CurrentMessage = GameInstance->GetMessage();
+				CurrentMessage.AppendChar('+');
+				GameInstance->SetMessage(CurrentMessage);
+			}*/
 			for (auto Enemy : EnemyPieces) 
 			{
 				LegalMoves(Enemy);
@@ -283,17 +291,18 @@ void AChessGameMode::CreateCurrentMove(ATile* Start, ATile* End, APiece* Moving,
 	TArray<TCHAR> Columns = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' };
 
 	int32 Xs_number = Start->GetGridPosition().X + 1;
-	FString StringaDaNumero = FString::Printf(TEXT("%d"), Xs_number);
-	TCHAR Xstart = StringaDaNumero[0];
+	FString StartXstring = FString::Printf(TEXT("%d"), Xs_number);
+	TCHAR Xstart = StartXstring[0];
 	TCHAR Ystart = Columns[Start->GetGridPosition().Y];
 
-	int32 Xe_number = Start->GetGridPosition().X + 1;
-	StringaDaNumero = FString::Printf(TEXT("%d"), Xe_number);
-	TCHAR Xend = StringaDaNumero[0];
+	int32 Xe_number = End->GetGridPosition().X + 1;
+	FString EndXstring = FString::Printf(TEXT("%d"), Xe_number);
+	TCHAR Xend = EndXstring[0];
 	TCHAR Yend =Columns[End->GetGridPosition().Y];
 
-	JustHappened_Array = { Moving->Id, Ystart, Xstart, Case, Yend, Xend };
-	FString JustHappened(JustHappened_Array.GetData(), JustHappened_Array.Num());
+	JustHappened_Array = {Moving->Id, Ystart, Xstart, Case, Yend, Xend};
+	JustHappened_Array.Add('\0');
+	FString JustHappened(JustHappened_Array.GetData());
 
 	auto GameInstance = Cast<UChessGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (GameInstance) 
