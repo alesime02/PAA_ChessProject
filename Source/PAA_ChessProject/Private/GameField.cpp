@@ -202,17 +202,6 @@ void AGameField::SpawnPawns()
 				UStaticMeshComponent* Comp = Obj->GetStatMeshComp();
 				SpawnBlackPiece(Obj, MaterialPath, NewX, NewY, Character, Comp);
 				NewY += 1;
-				/*Obj->SetActorScale3D(FVector(PieceScale, PieceScale, 0.2));
-				Obj->SetGridPosition(NewX, NewY);
-				Obj->ChangeBitColor();
-				FString MaterialPath = TEXT("/Game/Materials/M_Bqueen");
-				UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(NULL, nullptr, *MaterialPath));
-				UStaticMeshComponent* Comp = Obj->GetStatMeshComp();
-				Comp->SetMaterial(0, Material);
-				ATile* Position = TileMap[FVector2D(NewX, NewY)];
-				Position->SetTileStatus(EStatus::BLACKOCCUPIED);
-				Position->SetOccupier(Character);
-				BPieceInGame.Add(Obj);*/
 			}
 			if (Character == 'k')
 			{
@@ -221,17 +210,6 @@ void AGameField::SpawnPawns()
 				UStaticMeshComponent* Comp = BlackKing->GetStatMeshComp();
 				SpawnBlackPiece(BlackKing, MaterialPath, NewX, NewY, Character, Comp);
 				NewY += 1;
-				/*BlackKing->SetActorScale3D(FVector(PieceScale, PieceScale, 0.2));
-				BlackKing->SetGridPosition(NewX, NewY);
-				BlackKing->ChangeBitColor();
-				FString MaterialPath = TEXT("/Game/Materials/M_Bking");
-				UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(NULL, nullptr, *MaterialPath));
-				UStaticMeshComponent* Comp = BlackKing->GetStatMeshComp();
-				Comp->SetMaterial(0, Material);
-				ATile* Position = TileMap[FVector2D(NewX, NewY)];
-				Position->SetTileStatus(EStatus::BLACKOCCUPIED);
-				Position->SetOccupier(Character);*/
-				//BPieceInGame.Add(BlackKing);
 			}
 			if (Character == 'p')
 			{
@@ -240,17 +218,6 @@ void AGameField::SpawnPawns()
 				UStaticMeshComponent* Comp = Obj->GetStatMeshComp();
 				SpawnBlackPiece(Obj, MaterialPath, NewX, NewY, Character, Comp);
 				NewY += 1;
-				/*Obj->SetActorScale3D(FVector(PieceScale, PieceScale, 0.2));
-				Obj->SetGridPosition(NewX, NewY);
-				Obj->ChangeBitColor();
-				FString MaterialPath = TEXT("/Game/Materials/M_Bpawn");
-				UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(NULL, nullptr, *MaterialPath));
-				UStaticMeshComponent* Comp = Obj->GetStatMeshComp();
-				Comp->SetMaterial(0, Material);
-				ATile* Position = TileMap[FVector2D(NewX, NewY)];
-				Position->SetTileStatus(EStatus::BLACKOCCUPIED);*/
-				//Position->SetOccupier(Character);
-				//BPieceInGame.Add(Obj);
 			}
 
 		}
@@ -300,6 +267,7 @@ void AGameField::SpawnBlackPiece(APiece* ToSpawn, FString MaterialPath, int32 De
 	ToSpawn->PieceGridPosition.X = DestX;
 	ToSpawn->PieceGridPosition.Y = DestY;
 	ToSpawn->BitColor = 1;
+	ToSpawn->Id = id;
 	UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(NULL, nullptr, *MaterialPath));
 	Component->SetMaterial(0, Material);
 	ATile* Position = TileMap[FVector2D(DestX, DestY)];

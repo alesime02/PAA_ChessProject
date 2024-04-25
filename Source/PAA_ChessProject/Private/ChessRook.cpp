@@ -18,7 +18,7 @@ AChessRook::AChessRook()
 	SetRootComponent(Scene);
 	StaticMeshComponent->SetupAttachment(Scene);
 
-	/*RookGridPosition = FVector2D(0, 0); */
+	Id = 'R';
 }
 
 //aggiunto per i test

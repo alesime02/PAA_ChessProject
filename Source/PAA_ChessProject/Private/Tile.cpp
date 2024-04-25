@@ -20,6 +20,7 @@ ATile::ATile()
 	Status = EStatus::EMPTY;
 	TileGridPosition = FVector2D(0, 0);
 
+	Occupier = ' ';
 
 }
 

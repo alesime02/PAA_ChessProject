@@ -18,6 +18,7 @@ AChessQueen::AChessQueen()
 	SetRootComponent(Scene);
 	StaticMeshComponent->SetupAttachment(Scene);
 
+	Id = 'Q';
 }
 
 UStaticMeshComponent* AChessQueen::GetStatMeshComp()

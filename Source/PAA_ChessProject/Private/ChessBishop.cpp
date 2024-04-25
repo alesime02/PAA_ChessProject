@@ -18,6 +18,8 @@ AChessBishop::AChessBishop()
 	SetRootComponent(Scene);
 	StaticMeshComponent->SetupAttachment(Scene);
 
+	Id = 'B';
+
 }
 
 UStaticMeshComponent* AChessBishop::GetStatMeshComp()

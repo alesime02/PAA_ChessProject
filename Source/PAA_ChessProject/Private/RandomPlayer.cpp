@@ -2,6 +2,7 @@
 
 
 #include "RandomPlayer.h"
+#include "ChessPlayerController.h"
 
 // Sets default values
 ARandomPlayer::ARandomPlayer()
@@ -70,8 +71,14 @@ void ARandomPlayer::OnTurn()
 			FVector WhereToGo = GameMode->GField->GetPieceRelativeLocationByXYPosition(x, y);
 			MovingPiece->SetActorLocation(WhereToGo);
 			MovingPiece->PieceGridPosition = GameMode->GField->GetXYPositionByRelativeLocation(WhereToGo);
+			auto PC = Cast<AChessPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+			if (PC)
+			{
+				PC->SpawnButtonEvent.Broadcast();
+			}
 			GameMode->IsPair(GameMode->GField->WPieceInGame);
 			GameMode->IsCheck(MovingPiece, GameMode->GField->WhiteKing, GameMode->GField->WPieceInGame);
+			GameMode->CreateCurrentMove(Start, End, MovingPiece, '-');
 			GameMode->DecoloringTiles();
 			GameMode->TurnNextPlayer();
 		}
@@ -93,8 +100,14 @@ void ARandomPlayer::OnTurn()
 			FVector WhereToGo = GameMode->GField->GetPieceRelativeLocationByXYPosition(x, y);
 			MovingPiece->SetActorLocation(WhereToGo);
 			MovingPiece->PieceGridPosition = GameMode->GField->GetXYPositionByRelativeLocation(WhereToGo);
+			auto PC = Cast<AChessPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+			if (PC)
+			{
+				PC->SpawnButtonEvent.Broadcast();
+			}
 			GameMode->IsPair(GameMode->GField->WPieceInGame);
 			GameMode->IsCheck(MovingPiece, GameMode->GField->WhiteKing, GameMode->GField->WPieceInGame);
+			GameMode->CreateCurrentMove(Start, End, MovingPiece, 'x');
 			GameMode->DecoloringTiles();
 			GameMode->TurnNextPlayer();
 		}

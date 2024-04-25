@@ -277,6 +277,66 @@ void AChessGameMode::DecoloringTiles()
 	}
 }
 
+void AChessGameMode::CreateCurrentMove(ATile* Start, ATile* End, APiece* Moving, TCHAR Case)
+{
+	TArray<TCHAR> JustHappened_Array;
+	TArray<TCHAR> Columns = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' };
+
+	int32 Xs_number = Start->GetGridPosition().X + 1;
+	FString StringaDaNumero = FString::Printf(TEXT("%d"), Xs_number);
+	TCHAR Xstart = StringaDaNumero[0];
+	TCHAR Ystart = Columns[Start->GetGridPosition().Y];
+
+	int32 Xe_number = Start->GetGridPosition().X + 1;
+	StringaDaNumero = FString::Printf(TEXT("%d"), Xe_number);
+	TCHAR Xend = StringaDaNumero[0];
+	TCHAR Yend =Columns[End->GetGridPosition().Y];
+
+	JustHappened_Array = { Moving->Id, Ystart, Xstart, Case, Yend, Xend };
+	FString JustHappened(JustHappened_Array.GetData(), JustHappened_Array.Num());
+
+	auto GameInstance = Cast<UChessGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GameInstance) 
+	{
+		GameInstance->SetMessage(JustHappened);
+	}
+	UE_LOG(LogTemp, Error, TEXT("%s"), *GameInstance->GetMessage());
+}
+
+void AChessGameMode::CreateFieldStatus()
+{
+	FString Status;
+	for (int32 x = 7; x >= 0; x--)
+	{
+		int32 CounterFreeTiles = 0;
+		for (int32 y = 0; y < GField->Size; y++)
+		{
+			ATile* temp = GField->TileMap[FVector2D(x, y)];
+			switch (temp->GetOccupier()) 
+			{
+				case ' ':
+					CounterFreeTiles += 1;
+					break;
+				default:
+					if (CounterFreeTiles != 0) 
+					{
+						FString StringaDaNumero = FString::Printf(TEXT("%d"), CounterFreeTiles);
+						TCHAR FreeTiles = StringaDaNumero[0];
+						Status.AppendChar(FreeTiles);
+					}
+					Status.AppendChar(temp->GetOccupier());
+					break;
+			}
+		}
+		if (x > 0) 
+		{
+			Status.AppendChar('/');
+		}
+	}
+
+	
+}
+
 
 
 	

@@ -16,6 +16,9 @@ class PAA_CHESSPROJECT_API UChessGameInstance : public UGameInstance
 
 public:
 	UPROPERTY(EditAnywhere)
+	FString MoveMessage;
+
+	UPROPERTY(EditAnywhere)
 	int32 ScoreHumanPlayer = 0;
 
 	// score value for AI player
@@ -47,5 +50,11 @@ public:
 	// set the turn message
 	UFUNCTION(BlueprintCallable)
 	void SetTurnMessage(FString Message);
+
+	UFUNCTION(BlueprintCallable)
+	void SetMessage(FString Msg) { MoveMessage = Msg; }
+
+	UFUNCTION(BlueprintCallable)
+	FString GetMessage() { return MoveMessage; }
 	
 };

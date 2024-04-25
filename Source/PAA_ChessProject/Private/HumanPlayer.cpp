@@ -2,6 +2,7 @@
 
 
 #include "HumanPlayer.h"
+#include "ChessPlayerController.h"
 
 // Sets default values
 AHumanPlayer::AHumanPlayer()
@@ -93,7 +94,8 @@ void AHumanPlayer::OnClick()
 			//AChessGameMode* GameMode = Cast<AChessGameMode>(GetWorld()->GetAuthGameMode());
 			if (PieceToMove != nullptr) 
 			{
-				for (auto iterator : PieceToMove->Moves) 
+				TArray<FVector2D> CopyOfMoves = PieceToMove->Moves;
+				for (auto iterator : CopyOfMoves) 
 				{
 					if (MoveTo->GetGridPosition() == iterator) 
 					{
@@ -105,9 +107,15 @@ void AHumanPlayer::OnClick()
 						FVector WhereToGo = GameMode->GField->GetPieceRelativeLocationByXYPosition(x,y);
 						PieceToMove->SetActorLocation(WhereToGo);
 						PieceToMove->PieceGridPosition = GameMode->GField->GetXYPositionByRelativeLocation(WhereToGo);
+						auto PC = Cast<AChessPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+						if (PC)
+						{
+							PC->SpawnButtonEvent.Broadcast();
+						}
 						GameMode->DecoloringTiles();
 						GameMode->IsPair(GameMode->GField->BPieceInGame);
 						GameMode->IsCheck(PieceToMove, GameMode->GField->BlackKing, GameMode->GField->BPieceInGame);
+						GameMode->CreateCurrentMove(Start, MoveTo, PieceToMove, '-');
 						IsMyTurn = false;
 						GameMode->TurnNextPlayer();
 					}
@@ -120,7 +128,8 @@ void AHumanPlayer::OnClick()
 			if(PieceToMove != nullptr && ToCapture->BitColor == 1)
 			{
 				ATile* MoveTo = GameMode->GField->TileMap[ToCapture->PieceGridPosition];
-				for (auto iterator : PieceToMove->Moves) 
+				TArray<FVector2D> CopyOfMoves = PieceToMove->Moves;
+				for (auto iterator : CopyOfMoves) 
 				{
 					if (MoveTo->GetGridPosition() == iterator) 
 					{
@@ -142,9 +151,15 @@ void AHumanPlayer::OnClick()
 						FVector WhereToGo = GameMode->GField->GetPieceRelativeLocationByXYPosition(x, y);
 						PieceToMove->SetActorLocation(WhereToGo);
 						PieceToMove->PieceGridPosition = GameMode->GField->GetXYPositionByRelativeLocation(WhereToGo);
+						auto PC = Cast<AChessPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+						if (PC) 
+						{
+							PC->SpawnButtonEvent.Broadcast();
+						}
 						GameMode->DecoloringTiles();
 						GameMode->IsPair(GameMode->GField->BPieceInGame);
 						GameMode->IsCheck(PieceToMove, GameMode->GField->BlackKing, GameMode->GField->BPieceInGame);
+						GameMode->CreateCurrentMove(Start, MoveTo, PieceToMove, 'x');
 						IsMyTurn = false;
 						GameMode->TurnNextPlayer();
 					}

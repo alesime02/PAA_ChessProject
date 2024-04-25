@@ -27,6 +27,8 @@ public:
 
 	int32 BitColor = 0;
 
+	TCHAR Id;
+
 	virtual void PossibleMoves(AGameField* Field) {};
 
 protected:

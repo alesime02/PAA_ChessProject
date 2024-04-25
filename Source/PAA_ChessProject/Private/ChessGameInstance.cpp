@@ -33,3 +33,5 @@ void UChessGameInstance::SetTurnMessage(FString Message)
 {
 	CurrentTurnMessage = Message;
 }
+
+

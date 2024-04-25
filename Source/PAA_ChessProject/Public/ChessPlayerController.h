@@ -10,6 +10,8 @@
 #include "EnhancedInputSubsystems.h"
 #include "ChessPlayerController.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FButtonSpawn);
+
 /**
  * 
  */
@@ -19,6 +21,9 @@ class PAA_CHESSPROJECT_API AChessPlayerController : public APlayerController
 	GENERATED_BODY()
 	
 public:
+	UPROPERTY(BlueprintAssignable, Category = "ButtonEvent");
+	FButtonSpawn SpawnButtonEvent;
+
 	AChessPlayerController();
 
 	UPROPERTY(EditAnywhere, Category = Input)

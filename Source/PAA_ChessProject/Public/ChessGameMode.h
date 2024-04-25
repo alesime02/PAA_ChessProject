@@ -17,6 +17,10 @@ class PAA_CHESSPROJECT_API AChessGameMode : public AGameModeBase
 	GENERATED_BODY()
 	
 public:
+
+	void CreateCurrentMove(ATile* Start, ATile* End, APiece* Moving, TCHAR Case);
+
+	void CreateFieldStatus();
 	
 	TArray<IPlayerInterface*> Players;
 

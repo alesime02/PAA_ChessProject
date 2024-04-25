@@ -18,6 +18,8 @@ AChessPawn::AChessPawn()
 	SetRootComponent(Scene);
 	StaticMeshComponent->SetupAttachment(Scene);
 
+	Id = 'P';
+
 }
 
 UStaticMeshComponent* AChessPawn::GetStatMeshComp()

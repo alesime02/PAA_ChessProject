@@ -18,6 +18,8 @@ AChessKnight::AChessKnight()
 	SetRootComponent(Scene);
 	StaticMeshComponent->SetupAttachment(Scene);
 
+	Id = 'N';
+
 }
 
 UStaticMeshComponent* AChessKnight::GetStatMeshComp()
