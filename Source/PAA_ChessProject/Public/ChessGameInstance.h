@@ -15,8 +15,12 @@ class PAA_CHESSPROJECT_API UChessGameInstance : public UGameInstance
 	GENERATED_BODY()
 
 public:
+
 	UPROPERTY(EditAnywhere)
 	FString MoveMessage;
+
+	UPROPERTY(EditAnywhere)
+	FString CurrentField;
 
 	UPROPERTY(EditAnywhere)
 	int32 ScoreHumanPlayer = 0;
@@ -56,5 +60,11 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	FString GetMessage() { return MoveMessage; }
+
+	UFUNCTION(BlueprintCallable)
+	void SetField(FString Fld) { CurrentField = Fld; }
+
+	UFUNCTION(BlueprintCallable)
+	FString GetField() { return CurrentField; }
 	
 };

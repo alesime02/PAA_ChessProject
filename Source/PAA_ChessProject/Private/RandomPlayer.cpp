@@ -71,7 +71,10 @@ void ARandomPlayer::OnTurn()
 			FVector WhereToGo = GameMode->GField->GetPieceRelativeLocationByXYPosition(x, y);
 			MovingPiece->SetActorLocation(WhereToGo);
 			MovingPiece->PieceGridPosition = GameMode->GField->GetXYPositionByRelativeLocation(WhereToGo);
+			Start->SetOccupier(' ');
+			End->SetOccupier(MovingPiece->Id);
 			GameMode->CreateCurrentMove(Start, End, MovingPiece, '-');
+			GameMode->CreateFieldStatus();
 			GameMode->IsPair(GameMode->GField->WPieceInGame);
 			GameMode->IsCheck(MovingPiece, GameMode->GField->WhiteKing, GameMode->GField->WPieceInGame);
 			auto PC = Cast<AChessPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
@@ -100,7 +103,10 @@ void ARandomPlayer::OnTurn()
 			FVector WhereToGo = GameMode->GField->GetPieceRelativeLocationByXYPosition(x, y);
 			MovingPiece->SetActorLocation(WhereToGo);
 			MovingPiece->PieceGridPosition = GameMode->GField->GetXYPositionByRelativeLocation(WhereToGo);
+			Start->SetOccupier(' ');
+			End->SetOccupier(MovingPiece->Id);
 			GameMode->CreateCurrentMove(Start, End, MovingPiece, 'x');
+			GameMode->CreateFieldStatus();
 			GameMode->IsPair(GameMode->GField->WPieceInGame);
 			GameMode->IsCheck(MovingPiece, GameMode->GField->WhiteKing, GameMode->GField->WPieceInGame);
 			auto PC = Cast<AChessPlayerController>(UGameplayStatics::GetPlayerController(this, 0));

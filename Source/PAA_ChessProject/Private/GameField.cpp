@@ -19,8 +19,8 @@ AGameField::AGameField()
 	// pawns dimendion
 	PieceSize = 100;
 
-	FieldStatus = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
-	//FieldStatus = "7k/5Q2/R7/5K2/8/8/8/8";
+	FieldAtStart = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+	//FieldAtStart = "7k/5Q2/R7/5K2/8/8/8/8";
 }
 
 // Called when the game starts or when spawned
@@ -28,7 +28,7 @@ void AGameField::BeginPlay()
 {
 	Super::BeginPlay();
 	GenerateField();
-	SpawnPieces();
+	SpawnPieces(FieldAtStart);
 	
 }
 
@@ -53,7 +53,10 @@ void AGameField::ResetField()
 	if (GameMode->CurrentPlayer != 0) 
 	{
 		 UChessGameInstance* GameInstance = Cast<UChessGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-		 GameInstance->SetTurnMessage(TEXT("Wait your turn to reset"));
+		 if (GameInstance)
+		 {
+			 GameInstance->SetTurnMessage(TEXT("Wait your turn press the button"));
+		 }
 	}
 	else
 	{
@@ -75,9 +78,48 @@ void AGameField::ResetField()
 
 		GameMode->CheckMate = false;
 		GameMode->Pair = false;
-		SpawnPieces();
+		SpawnPieces(FieldAtStart);
 		GameMode->ChoosePlayerAndStartGame();
 
+	}
+}
+
+void AGameField::ReplayField(FString FieldToReturn)
+{
+	AChessGameMode* GameMode = Cast<AChessGameMode>(GetWorld()->GetAuthGameMode());
+	UChessGameInstance* GameInstance = Cast<UChessGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GameMode->CurrentPlayer != 0)
+	{
+		if (GameInstance)
+		{
+			GameInstance->SetTurnMessage(TEXT("Wait your turn press the button"));
+		}
+	}
+	else 
+	{
+		if (GameInstance)
+		{
+			for (ATile* Obj : TileArray)
+			{
+				Obj->SetTileStatus(EStatus::EMPTY);
+				Obj->SetOccupier(' ');
+			}
+			for (APiece* Obj : BPieceInGame)
+			{
+				Obj->Destroy();
+			};
+			BPieceInGame.Empty();
+			for (APiece* Obj : WPieceInGame)
+			{
+				Obj->Destroy();
+			}
+			WPieceInGame.Empty();
+
+			GameMode->CheckMate = false;
+			GameMode->Pair = false;
+			SpawnPieces(FieldToReturn);
+			GameMode->ChoosePlayerAndStartGame();
+		}
 	}
 }
 
@@ -106,15 +148,15 @@ void AGameField::GenerateField()
 	}
 }
 
-//spawn per test
-void AGameField::SpawnPieces()
+void AGameField::SpawnPieces(FString Field)
 {
 	int32 NewX = 7;
 	int32 NewY = 0;
 	const float PieceScale = PieceSize / 100;
-	for (int32 i = 0; i < FieldStatus.Len(); ++i)
+	for (int32 i = 0; i < Field.Len(); ++i)
+	//for (auto i : Field)
 	{
-		TCHAR Character = FieldStatus[i];
+		TCHAR Character = Field[i];
 		if (Character == '/')
 		{
 			NewX -= 1;
@@ -234,13 +276,6 @@ TArray<ATile*>& AGameField::GetTileArray()
 {
 	return TileArray;
 }
-
-FString& AGameField::GetStatus()
-{
-	return FieldStatus;
-}
-
-
 
 FVector AGameField::GetRelativeLocationByXYPosition(const int32 InX, const int32 InY) const
 {

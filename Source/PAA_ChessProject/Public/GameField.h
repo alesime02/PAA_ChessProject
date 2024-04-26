@@ -88,7 +88,7 @@ public:
 	float PieceSize;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FString FieldStatus;
+	FString FieldAtStart;
 
 	// Called when an instance of this class is placed (in editor) or spawned
 	virtual void OnConstruction(const FTransform& Transform) override;
@@ -97,14 +97,15 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ResetField();
 
+	UFUNCTION(BlueprintCallable)
+	void ReplayField(FString FieldToReturn);
+
 	// generate an empty game field
 	void GenerateField();
 
 	// genera le pedine
-	void SpawnPieces();
-
-	//restituisce la stringa di stato
-	FString& GetStatus();
+	UFUNCTION(BlueprintCallable)
+	void SpawnPieces(FString Field);
 
 	// return a (x,y) position given a hit (click) on a field tile
 	FVector2D GetPosition(const FHitResult& Hit);

@@ -333,17 +333,30 @@ void AChessGameMode::CreateFieldStatus()
 						FString StringaDaNumero = FString::Printf(TEXT("%d"), CounterFreeTiles);
 						TCHAR FreeTiles = StringaDaNumero[0];
 						Status.AppendChar(FreeTiles);
+						CounterFreeTiles = 0;
 					}
 					Status.AppendChar(temp->GetOccupier());
 					break;
 			}
 		}
+		if (CounterFreeTiles != 0)
+		{
+			FString StringaDaNumero = FString::Printf(TEXT("%d"), CounterFreeTiles);
+			TCHAR FreeTiles = StringaDaNumero[0];
+			Status.AppendChar(FreeTiles);
+		}
+
 		if (x > 0) 
 		{
 			Status.AppendChar('/');
 		}
 	}
-
+	auto GameInstance = Cast<UChessGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GameInstance)
+	{
+		GameInstance->SetField(Status);
+	}
+	UE_LOG(LogTemp, Error, TEXT("%s"), *GameInstance->GetField());
 	
 }
 
