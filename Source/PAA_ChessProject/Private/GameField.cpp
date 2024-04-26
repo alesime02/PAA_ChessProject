@@ -20,7 +20,7 @@ AGameField::AGameField()
 	PieceSize = 100;
 
 	FieldStatus = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
-	//FieldStatus = "4k3/2Q5/R7/5K2/8/8/8/8";
+	//FieldStatus = "7k/5Q2/R7/5K2/8/8/8/8";
 }
 
 // Called when the game starts or when spawned
@@ -28,7 +28,7 @@ void AGameField::BeginPlay()
 {
 	Super::BeginPlay();
 	GenerateField();
-	SpawnPawns();
+	SpawnPieces();
 	
 }
 
@@ -75,7 +75,7 @@ void AGameField::ResetField()
 
 		GameMode->CheckMate = false;
 		GameMode->Pair = false;
-		SpawnPawns();
+		SpawnPieces();
 		GameMode->ChoosePlayerAndStartGame();
 
 	}
@@ -107,7 +107,7 @@ void AGameField::GenerateField()
 }
 
 //spawn per test
-void AGameField::SpawnPawns()
+void AGameField::SpawnPieces()
 {
 	int32 NewX = 7;
 	int32 NewY = 0;

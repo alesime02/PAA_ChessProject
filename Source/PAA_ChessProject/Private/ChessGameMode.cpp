@@ -73,17 +73,15 @@ void AChessGameMode::TurnNextPlayer()
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Scacco Matto"));
 		Players[CurrentPlayer]->OnWin();
-		for (int32 i = 0; i < Players.Num(); i++)
-		{
-			if (i != CurrentPlayer)
-			{
-				Players[i]->OnLose();
-			}
-		}
 	}
 	else if (Pair)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Patta"));
+		auto GameInstance = Cast<UChessGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+		if (GameInstance)
+		{
+			GameInstance->SetTurnMessage(TEXT("Is Pair!"));
+		}
 	}
 	else
 	{
@@ -221,13 +219,13 @@ void AChessGameMode::IsCheck(APiece* Current, AChessKing* EnemyKing, TArray<APie
 	{
 		if (PossibleMove == EnemyKing->PieceGridPosition)
 		{
-			/*auto GameInstance = Cast<UChessGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+			auto GameInstance = Cast<UChessGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 			if (GameInstance)
 			{
 				FString CurrentMessage = GameInstance->GetMessage();
 				CurrentMessage.AppendChar('+');
 				GameInstance->SetMessage(CurrentMessage);
-			}*/
+			}
 			for (auto Enemy : EnemyPieces) 
 			{
 				LegalMoves(Enemy);
@@ -238,6 +236,9 @@ void AChessGameMode::IsCheck(APiece* Current, AChessKing* EnemyKing, TArray<APie
 				if (Enemy == EnemyPieces.Last() && Enemy->Moves.IsEmpty()) 
 				{
 					CheckMate = true;
+					FString CurrentMessage = GameInstance->GetMessage();
+					CurrentMessage.AppendChar('+');
+					GameInstance->SetMessage(CurrentMessage);
 				}
 			}		
 		}

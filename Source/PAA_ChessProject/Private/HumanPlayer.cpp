@@ -56,11 +56,11 @@ void AHumanPlayer::OnWin()
 	GameInstance->IncrementScoreHumanPlayer();
 }
 
-void AHumanPlayer::OnLose()
-{
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("You Lose!"));
-	GameInstance->SetTurnMessage(TEXT("Human Loses!"));
-}
+//void AHumanPlayer::OnLose()
+//{
+//	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("You Lose!"));
+//	GameInstance->SetTurnMessage(TEXT("Human Loses!"));
+//}
 
 void AHumanPlayer::OnClick()
 {

@@ -123,9 +123,9 @@ void ARandomPlayer::OnWin()
 	GameInstance->IncrementScoreAiPlayer();
 }
 
-void ARandomPlayer::OnLose()
-{
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("AI (Random) Loses!"));
-	GameInstance->SetTurnMessage(TEXT("AI Loses!"));
-}
+//void ARandomPlayer::OnLose()
+//{
+//	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("AI (Random) Loses!"));
+//	GameInstance->SetTurnMessage(TEXT("AI Loses!"));
+//}
 

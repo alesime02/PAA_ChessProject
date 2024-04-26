@@ -101,7 +101,7 @@ public:
 	void GenerateField();
 
 	// genera le pedine
-	void SpawnPawns();
+	void SpawnPieces();
 
 	//restituisce la stringa di stato
 	FString& GetStatus();
