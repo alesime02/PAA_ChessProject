@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Tile.generated.h"
 
+// 
 UENUM()
 enum class EStatus : uint8
 {
@@ -29,11 +30,13 @@ public:
 	// get the tile status
 	EStatus GetTileStatus();
 
+	// set with the Id of the piece on this tile
 	void SetOccupier(TCHAR pieceID);
 
+	// get the Id of the piece occupying this tile
 	TCHAR GetOccupier();
 
-	//get the static mesh component
+	// get the static mesh component
 	UStaticMeshComponent* GetStatMeshComp();
 
 	// set the (x, y) position

@@ -22,8 +22,10 @@ class PAA_CHESSPROJECT_API IPlayerInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
+	// Number to identifie the player
 	int32 PlayerNumber;
 
+	// Boolean used to check if the RandomPlayer is executing his OnTurn
 	bool Working;
 	
 	virtual void OnTurn() {};

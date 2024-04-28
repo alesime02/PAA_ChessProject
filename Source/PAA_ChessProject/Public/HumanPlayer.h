@@ -34,8 +34,10 @@ protected:
 	// keeps track of turn
 	bool IsMyTurn = false;
 
+	// to keep memory of the first click
 	bool ClickBit = false;
 
+	// the selected piece to move
 	APiece* PieceToMove;
 
 public:	

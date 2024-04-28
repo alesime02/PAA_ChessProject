@@ -4,6 +4,7 @@
 #include "ChessPawn.h"
 #include "GameField.h"
 
+
 // Sets default values
 AChessPawn::AChessPawn()
 {
@@ -44,12 +45,12 @@ void AChessPawn::PossibleMoves(AGameField* Field)
 				if (Next->GetTileStatus() == EStatus::EMPTY)
 				{
 					Moves.Add(temp);
-					temp.X -= 1;
 				}
 			}
 		}
 		if (StartY > 0)
 		{
+			temp.X = StartX + 1;
 			temp.Y = StartY - 1;
 			ATile* NextLDiagonal = Field->TileMap[(temp)];
 			if (NextLDiagonal->GetTileStatus() == EStatus::BLACKOCCUPIED)
@@ -60,6 +61,7 @@ void AChessPawn::PossibleMoves(AGameField* Field)
 		}
 		if (StartY < 7)
 		{
+			temp.X = StartX + 1;
 			temp.Y = StartY + 1;
 			ATile* NextRDiagonal = Field->TileMap[(temp)];
 			if (NextRDiagonal->GetTileStatus() == EStatus::BLACKOCCUPIED)
@@ -88,6 +90,7 @@ void AChessPawn::PossibleMoves(AGameField* Field)
 		}
 		if (StartY > 0)
 		{
+			temp.X = StartX - 1;
 			temp.Y = StartY - 1;
 			ATile* NextLDiagonal = Field->TileMap[(temp)];
 			if (NextLDiagonal->GetTileStatus() == EStatus::WHITEOCCUPIED)
@@ -97,6 +100,7 @@ void AChessPawn::PossibleMoves(AGameField* Field)
 		}
 		if (StartY < 7)
 		{
+			temp.X = StartX - 1;
 			temp.Y = StartY + 1;
 			ATile* NextRDiagonal = Field->TileMap[(temp)];
 			if (NextRDiagonal->GetTileStatus() == EStatus::WHITEOCCUPIED)

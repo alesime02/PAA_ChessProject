@@ -26,33 +26,36 @@ public:
 	UPROPERTY(Transient)
 	TArray<ATile*> TileArray;
 
-	//given a position returns a tile
+	// given a position returns a tile
 	UPROPERTY(Transient)
 	TMap<FVector2D, ATile*> TileMap;
 
-	UPROPERTY(Transient)
-	TMap<FVector2D, APiece*> PieceMap;
-
+	// keep track of the white pieces in game
 	UPROPERTY(Transient)
 	TArray<APiece*> WPieceInGame;
 
+	// keep track of the black pieces in game
 	UPROPERTY(Transient)
 	TArray<APiece*> BPieceInGame;
 
+	// a pointer to the black King in game
 	UPROPERTY(Transient)
 	AChessKing* BlackKing;
 
+	// a pointer to the white King in game
 	UPROPERTY(Transient)
 	AChessKing* WhiteKing;
 
+	// function to modifie the padding between the tiles(in this project is 0)
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float NormalizedCellPadding;
-
-	static const int32 NOT_ASSIGNED = -1;
 
 	// size of field
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	int32 Size;
+
+	// pointer to the pawn that has to be promoted
+	APiece* ReceivingPromotion;
 
 	// TSubclassOf template class that provides UClass type safety
 	UPROPERTY(EditDefaultsOnly)
@@ -84,26 +87,45 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float TileSize;
 
+	// piece size
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float PieceSize;
 
+	// the string that represent the field that has to be generated
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FString FieldAtStart;
 
 	// Called when an instance of this class is placed (in editor) or spawned
 	virtual void OnConstruction(const FTransform& Transform) override;
 
-	// remove all signs from the field
+	// function used to promote the black pawns
+	void RandomBlackPromotion();
+
+	// functions used to let the human player choose the pawn promotion
+	UFUNCTION(BlueprintCallable)
+	void PromotePawnToQueen();
+
+	UFUNCTION(BlueprintCallable)
+	void PromotePawnToRook();
+
+	UFUNCTION(BlueprintCallable)
+	void PromotePawnToBishop();
+
+	UFUNCTION(BlueprintCallable)
+	void PromotePawnToKnight();
+
+	// restore the field to the initial status
 	UFUNCTION(BlueprintCallable)
 	void ResetField();
 
+	// recreate the field of a specific move
 	UFUNCTION(BlueprintCallable)
-	void ReplayField(FString FieldToReturn);
+	void ReplayField(FString FieldToReturn, int32 Player);
 
 	// generate an empty game field
 	void GenerateField();
 
-	// genera le pedine
+	// generate the pieces
 	UFUNCTION(BlueprintCallable)
 	void SpawnPieces(FString Field);
 
@@ -116,12 +138,13 @@ public:
 	// return a relative position given (x,y) position of a tile
 	FVector GetRelativeLocationByXYPosition(const int32 InX, const int32 InY) const;
 
-	// return a relative position given (x,y) position of a piece
+	// return a relative tile position given (x,y) position of a piece
 	FVector GetPieceRelativeLocationByXYPosition(const int32 InX, const int32 InY) const;
 
-	// return (x,y) position given a relative position
+	// return (x,y) piece position given a relative position
 	FVector2D GetXYPositionByRelativeLocation(const FVector& Location) const;
 
+	// functions to spawn teh white and black pieces in a templated way
 	void SpawnBlackPiece(APiece* ToSpawn, FString MaterialPath, int32 DestX, int32 DestY, TCHAR id, UStaticMeshComponent* Component);
 
 	void SpawnWhitePiece(APiece* ToSpawn, int32 DestX, int32 DestY, TCHAR id);

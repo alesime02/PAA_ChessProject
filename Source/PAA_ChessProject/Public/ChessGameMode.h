@@ -26,6 +26,9 @@ public:
 
 	int32 CurrentPlayer;
 
+	UFUNCTION(BlueprintCallable)
+	int32 GetCurrentPlayer() { return CurrentPlayer; }
+
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AGameField> GameFieldClass;
 

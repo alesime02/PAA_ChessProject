@@ -239,6 +239,7 @@ void AChessGameMode::IsCheck(APiece* Current, AChessKing* EnemyKing, TArray<APie
 					FString CurrentMessage = GameInstance->GetMessage();
 					CurrentMessage.AppendChar('+');
 					GameInstance->SetMessage(CurrentMessage);
+					GameInstance->SetField("CheckMate");
 				}
 			}		
 		}
@@ -248,6 +249,46 @@ void AChessGameMode::IsCheck(APiece* Current, AChessKing* EnemyKing, TArray<APie
 
 void AChessGameMode::IsPair(TArray<APiece*> EnemyPieces)
 {
+	auto GameInstance = Cast<UChessGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GField->WPieceInGame.Num() + GField->BPieceInGame.Num() == 2)
+	{
+		if (GField->WPieceInGame[0]->Id == 'K' && GField->BPieceInGame[0]->Id == 'k')
+		{
+			Pair = true;
+			if (GameInstance)
+			{
+				GameInstance->SetField("Pair");
+			}
+		}
+	}
+	else if (GField->WPieceInGame.Num() + GField->BPieceInGame.Num() == 3)
+	{
+
+		for (auto WhitePiece : GField->WPieceInGame)
+		{
+			if (WhitePiece->Id == 'B' || WhitePiece->Id == 'N')
+			{
+				Pair = true;
+				if (GameInstance)
+				{
+					GameInstance->SetField("Pair");
+				}
+
+			}
+		}
+		for (auto BlackPiece : GField->BPieceInGame)
+		{
+			if (BlackPiece->Id == 'b' || BlackPiece->Id == 'n')
+			{
+				Pair = true;
+				if (GameInstance)
+				{
+					GameInstance->SetField("Pair");
+				}
+			}
+			
+		}
+	}
 	for (auto Enemy : EnemyPieces)
 	{
 		LegalMoves(Enemy);
@@ -258,6 +299,10 @@ void AChessGameMode::IsPair(TArray<APiece*> EnemyPieces)
 		if (Enemy == EnemyPieces.Last() && Enemy->Moves.IsEmpty())
 		{
 			Pair = true;
+			if (GameInstance)
+			{
+				GameInstance->SetField("Pair");
+			}
 		}
 	}
 }
@@ -359,6 +404,7 @@ void AChessGameMode::CreateFieldStatus()
 	UE_LOG(LogTemp, Error, TEXT("%s"), *GameInstance->GetField());
 	
 }
+
 
 
 

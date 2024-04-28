@@ -13,6 +13,7 @@ class PAA_CHESSPROJECT_API AChessPawn : public APiece
 	GENERATED_BODY()
 	
 public:	
+
 	// Sets default values for this actor's properties
 	AChessPawn();
 

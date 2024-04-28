@@ -4,6 +4,7 @@
 #include "GameField.h"
 #include "ChessGameMode.h"
 #include "HumanPlayer.h"
+#include "ChessPlayerController.h"
 
 // Sets default values
 AGameField::AGameField()
@@ -18,16 +19,17 @@ AGameField::AGameField()
 	CellPadding = 0;
 	// pawns dimendion
 	PieceSize = 100;
-
+	// string that describe the field at the start of the game
 	FieldAtStart = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
-	//FieldAtStart = "7k/5Q2/R7/5K2/8/8/8/8";
 }
 
 // Called when the game starts or when spawned
 void AGameField::BeginPlay()
 {
 	Super::BeginPlay();
+	// create the field
 	GenerateField();
+	// create the pieces
 	SpawnPieces(FieldAtStart);
 	
 }
@@ -46,10 +48,157 @@ void AGameField::OnConstruction(const FTransform& Transform)
 	NormalizedCellPadding = FMath::RoundToDouble(((TileSize + CellPadding) / TileSize) * 100) / 100;
 }
 
-// DA SISTEMARE!!!
+void AGameField::RandomBlackPromotion()
+{
+	// take the pointer to the pawn that has to be promoted
+	FVector2D Coordinates = ReceivingPromotion->PieceGridPosition;
+	// save his location ad uses it to spawn the new piece
+	FVector Location = AGameField::GetPieceRelativeLocationByXYPosition(Coordinates.X, Coordinates.Y);
+	BPieceInGame.Remove(ReceivingPromotion);
+	ReceivingPromotion->Destroy();
+	FString MaterialPath;
+	UStaticMeshComponent* Comp;
+	AChessQueen* NewQueen;
+	AChessRook* NewRook;
+	AChessBishop* NewBishop;
+	AChessKnight* NewKnight;
+	// choose a random promotion
+	int32 RandPromotion = FMath::RandRange(1, 4);
+	switch (RandPromotion) 
+	{
+	case 1:
+		NewQueen = GetWorld()->SpawnActor<AChessQueen>(QueenClass, Location, FRotator::ZeroRotator);
+		MaterialPath = TEXT("/Game/Materials/M_Bqueen");
+		Comp = NewQueen->GetStatMeshComp();
+		SpawnBlackPiece(NewQueen, MaterialPath, Coordinates.X, Coordinates.Y, 'q', Comp);
+		break;
+	case 2:
+		NewRook = GetWorld()->SpawnActor<AChessRook>(RookClass, Location, FRotator::ZeroRotator);
+		MaterialPath = TEXT("/Game/Materials/M_Brook");
+		Comp = NewRook->GetStatMeshComp();
+		SpawnBlackPiece(NewRook, MaterialPath, Coordinates.X, Coordinates.Y, 'r', Comp);
+		break;
+	case 3:
+		NewBishop = GetWorld()->SpawnActor<AChessBishop>(BishopClass, Location, FRotator::ZeroRotator);
+		MaterialPath = TEXT("/Game/Materials/M_Bbishop");
+		Comp = NewBishop->GetStatMeshComp();
+		SpawnBlackPiece(NewBishop, MaterialPath, Coordinates.X, Coordinates.Y, 'b', Comp);
+		break;
+	case 4:
+		NewKnight = GetWorld()->SpawnActor<AChessKnight>(KnightClass, Location, FRotator::ZeroRotator);
+		MaterialPath = TEXT("/Game/Materials/M_Bknight");
+		Comp = NewKnight->GetStatMeshComp();
+		SpawnBlackPiece(NewKnight, MaterialPath, Coordinates.X, Coordinates.Y, 'n', Comp);
+		break;
+	}
+}
+
+
+
+
+
+
+void AGameField::PromotePawnToQueen()
+{
+	// take the pointer to the pawn that has to be promoted
+	FVector2D Coordinates = ReceivingPromotion->PieceGridPosition;
+	// save his location ad uses it to spawn the new piece
+	FVector Location = AGameField::GetPieceRelativeLocationByXYPosition(Coordinates.X, Coordinates.Y);
+	WPieceInGame.Remove(ReceivingPromotion);
+	ReceivingPromotion->Destroy();
+	// create a new piece where there was the promoted pawn
+	AChessQueen* Obj = GetWorld()->SpawnActor<AChessQueen>(QueenClass, Location, FRotator::ZeroRotator);
+	SpawnWhitePiece(Obj, Coordinates.X, Coordinates.Y, 'Q');
+	AChessGameMode* GameMode = Cast<AChessGameMode>(GetWorld()->GetAuthGameMode());
+	GameMode->DecoloringTiles();
+	GameMode->CreateFieldStatus();
+	// check if the new piece cause a pair or a check condition 
+	GameMode->IsPair(GameMode->GField->BPieceInGame);
+	GameMode->IsCheck(Obj, GameMode->GField->BlackKing, GameMode->GField->BPieceInGame);
+	auto PC = Cast<AChessPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	if (PC)
+	{
+		PC->SpawnButtonEvent.Broadcast();
+	}
+	GameMode->TurnNextPlayer();
+	
+
+}
+
+// those functions works the same as PromotePawnToQueen
+void AGameField::PromotePawnToRook()
+{
+	
+	FVector2D Coordinates = ReceivingPromotion->PieceGridPosition;
+	FVector Location = AGameField::GetPieceRelativeLocationByXYPosition(Coordinates.X, Coordinates.Y);
+	WPieceInGame.Remove(ReceivingPromotion);
+	ReceivingPromotion->Destroy();
+	AChessRook* Obj = GetWorld()->SpawnActor<AChessRook>(RookClass, Location, FRotator::ZeroRotator);
+	SpawnWhitePiece(Obj, Coordinates.X, Coordinates.Y, 'R');
+	AChessGameMode* GameMode = Cast<AChessGameMode>(GetWorld()->GetAuthGameMode());
+	GameMode->DecoloringTiles();
+	GameMode->CreateFieldStatus();
+	GameMode->IsPair(GameMode->GField->BPieceInGame);
+	GameMode->IsCheck(Obj, GameMode->GField->BlackKing, GameMode->GField->BPieceInGame);
+	auto PC = Cast<AChessPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	if (PC)
+	{
+		PC->SpawnButtonEvent.Broadcast();
+	}
+	GameMode->TurnNextPlayer();
+}
+
+void AGameField::PromotePawnToBishop()
+{
+
+	FVector2D Coordinates = ReceivingPromotion->PieceGridPosition;
+	FVector Location = AGameField::GetPieceRelativeLocationByXYPosition(Coordinates.X, Coordinates.Y);
+	WPieceInGame.Remove(ReceivingPromotion);
+	ReceivingPromotion->Destroy();
+	AChessBishop* Obj = GetWorld()->SpawnActor<AChessBishop>(BishopClass, Location, FRotator::ZeroRotator);
+	SpawnWhitePiece(Obj, Coordinates.X, Coordinates.Y, 'B');
+	AChessGameMode* GameMode = Cast<AChessGameMode>(GetWorld()->GetAuthGameMode());
+	GameMode->DecoloringTiles();
+	GameMode->CreateFieldStatus();
+	GameMode->IsPair(GameMode->GField->BPieceInGame);
+	GameMode->IsCheck(Obj, GameMode->GField->BlackKing, GameMode->GField->BPieceInGame);
+	auto PC = Cast<AChessPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	if (PC)
+	{
+		PC->SpawnButtonEvent.Broadcast();
+	}
+	GameMode->TurnNextPlayer();
+}
+
+void AGameField::PromotePawnToKnight()
+{
+	FVector2D Coordinates = ReceivingPromotion->PieceGridPosition;
+	FVector Location = AGameField::GetPieceRelativeLocationByXYPosition(Coordinates.X, Coordinates.Y);
+	WPieceInGame.Remove(ReceivingPromotion);
+	ReceivingPromotion->Destroy();
+	AChessKnight* Obj = GetWorld()->SpawnActor<AChessKnight>(KnightClass, Location, FRotator::ZeroRotator);
+	SpawnWhitePiece(Obj, Coordinates.X, Coordinates.Y, 'N');
+	AChessGameMode* GameMode = Cast<AChessGameMode>(GetWorld()->GetAuthGameMode());
+	GameMode->DecoloringTiles();
+	GameMode->CreateFieldStatus();
+	GameMode->IsPair(GameMode->GField->BPieceInGame);
+	GameMode->IsCheck(Obj, GameMode->GField->BlackKing, GameMode->GField->BPieceInGame);
+	auto PC = Cast<AChessPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	if (PC)
+	{
+		PC->SpawnButtonEvent.Broadcast();
+	}
+	GameMode->TurnNextPlayer();
+}
+
+
+
+
+
 void AGameField::ResetField()
 {
 	AChessGameMode* GameMode = Cast<AChessGameMode>(GetWorld()->GetAuthGameMode());
+	// check if it's the human's turn, button can'r be pressed in AI's turn
 	if (GameMode->CurrentPlayer != 0) 
 	{
 		 UChessGameInstance* GameInstance = Cast<UChessGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
@@ -60,6 +209,7 @@ void AGameField::ResetField()
 	}
 	else
 	{
+		// set al the tiles as empty and destroy all the existing pieces
 		for (ATile* Obj : TileArray)
 		{
 			Obj->SetTileStatus(EStatus::EMPTY);
@@ -78,13 +228,15 @@ void AGameField::ResetField()
 
 		GameMode->CheckMate = false;
 		GameMode->Pair = false;
+		// recreate the start configuration and start game
 		SpawnPieces(FieldAtStart);
 		GameMode->ChoosePlayerAndStartGame();
 
 	}
 }
 
-void AGameField::ReplayField(FString FieldToReturn)
+// works as the resetField but it's
+void AGameField::ReplayField(FString FieldToReturn, int32 Player)
 {
 	AChessGameMode* GameMode = Cast<AChessGameMode>(GetWorld()->GetAuthGameMode());
 	UChessGameInstance* GameInstance = Cast<UChessGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
@@ -97,7 +249,7 @@ void AGameField::ReplayField(FString FieldToReturn)
 	}
 	else 
 	{
-		if (GameInstance)
+		if (GameInstance && FieldToReturn != "CheckMate" && FieldToReturn != "Pair")
 		{
 			for (ATile* Obj : TileArray)
 			{
@@ -118,10 +270,12 @@ void AGameField::ReplayField(FString FieldToReturn)
 			GameMode->CheckMate = false;
 			GameMode->Pair = false;
 			SpawnPieces(FieldToReturn);
-			GameMode->ChoosePlayerAndStartGame();
+			GameMode->CurrentPlayer = Player;
+			GameMode->TurnNextPlayer();
 		}
 	}
 }
+
 
 
 void AGameField::GenerateField()
@@ -148,11 +302,13 @@ void AGameField::GenerateField()
 	}
 }
 
+
+
 void AGameField::SpawnPieces(FString Field)
 {
 	int32 NewX = 7;
 	int32 NewY = 0;
-	const float PieceScale = PieceSize / 100;
+	//const float PieceScale = PieceSize / 100;
 	for (int32 i = 0; i < Field.Len(); ++i)
 	//for (auto i : Field)
 	{

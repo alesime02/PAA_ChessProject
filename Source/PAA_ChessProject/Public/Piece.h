@@ -18,17 +18,20 @@ public:
 	// Sets default values for this actor's properties
 	APiece();
 
-	// (x, y) position of the tile, aggiunto per i test
+	// (x, y) position on the chessboard
 	FVector2D PieceGridPosition;
 
 	// array of the legal moves
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<FVector2D> Moves;
 
+	// int to distinguish the owner
 	int32 BitColor = 0;
 
+	// Identifier of the piece
 	TCHAR Id;
 
+	// Function to compute the hypothetical moves
 	virtual void PossibleMoves(AGameField* Field) {};
 
 protected:

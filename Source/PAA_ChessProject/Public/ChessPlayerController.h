@@ -11,7 +11,7 @@
 #include "ChessPlayerController.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FButtonSpawn);
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPromotion);
 /**
  * 
  */
@@ -23,6 +23,9 @@ class PAA_CHESSPROJECT_API AChessPlayerController : public APlayerController
 public:
 	UPROPERTY(BlueprintAssignable, Category = "ButtonEvent");
 	FButtonSpawn SpawnButtonEvent;
+
+	UPROPERTY(BlueprintAssignable, Category = "ButtonEvent");
+	FOnPromotion PromoteEvent;
 
 	AChessPlayerController();
 

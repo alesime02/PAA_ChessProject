@@ -66,5 +66,4 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	FString GetField() { return CurrentField; }
-	
 };

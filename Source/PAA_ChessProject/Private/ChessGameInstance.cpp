@@ -2,7 +2,6 @@
 
 
 #include "ChessGameInstance.h"
-#include <Components/EditableTextBox.h>
 
 void UChessGameInstance::IncrementScoreHumanPlayer()
 {

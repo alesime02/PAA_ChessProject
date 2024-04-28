@@ -17,9 +17,9 @@ ATile::ATile()
 	SetRootComponent(Scene);
 	StaticMeshComponent->SetupAttachment(Scene);
 
+	// setting the initials property of the tiles
 	Status = EStatus::EMPTY;
 	TileGridPosition = FVector2D(0, 0);
-
 	Occupier = ' ';
 
 }
