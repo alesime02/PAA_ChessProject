@@ -30,6 +30,7 @@ void AChessKnight::PossibleMoves(AGameField* Field)
 	double StartX = this->PieceGridPosition[0];
 	double StartY = this->PieceGridPosition[1];
 	EStatus EnemyStatus;
+	// check wich of the moves of the knight is possible from the position he is
 	TArray<FVector2D> Directions = { FVector2D(1,-2), FVector2D(2,-1), FVector2D(2,1), FVector2D(1,2), FVector2D(-1,2), FVector2D(-2,1), FVector2D(-2,-1), FVector2D(-1,-2) };
 	if (this->BitColor == 0)
 	{

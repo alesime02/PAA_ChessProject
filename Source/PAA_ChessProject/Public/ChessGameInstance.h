@@ -15,13 +15,15 @@ class PAA_CHESSPROJECT_API UChessGameInstance : public UGameInstance
 	GENERATED_BODY()
 
 public:
-
+	// the string that will appear on the replay buttons
 	UPROPERTY(EditAnywhere)
 	FString MoveMessage;
 
+	// the button associated string that describe the field after the move they dispay
 	UPROPERTY(EditAnywhere)
 	FString CurrentField;
 
+	// score value for human player
 	UPROPERTY(EditAnywhere)
 	int32 ScoreHumanPlayer = 0;
 
@@ -55,15 +57,19 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetTurnMessage(FString Message);
 
+	// set the move message
 	UFUNCTION(BlueprintCallable)
 	void SetMessage(FString Msg) { MoveMessage = Msg; }
 
+	// get the move message
 	UFUNCTION(BlueprintCallable)
 	FString GetMessage() { return MoveMessage; }
 
+	//  set the field string
 	UFUNCTION(BlueprintCallable)
 	void SetField(FString Fld) { CurrentField = Fld; }
 
+	// get the field string
 	UFUNCTION(BlueprintCallable)
 	FString GetField() { return CurrentField; }
 };

@@ -30,6 +30,7 @@ void AChessPawn::PossibleMoves(AGameField* Field)
 	Moves.Empty();
 	const double StartX = this->PieceGridPosition[0];
 	const double StartY = this->PieceGridPosition[1];
+	// computing for a white pawn
 	if (this->BitColor == 0 && StartX < 7) 
 	{
 		FVector2D temp(StartX + 1, StartY);
@@ -37,6 +38,7 @@ void AChessPawn::PossibleMoves(AGameField* Field)
 		if (Next->GetTileStatus() == EStatus::EMPTY)
 		{
 			Moves.Add(temp);
+			// in this situation (the first move), the pawn has an extra possible move
 			if (StartX == 1)
 			{
 				temp.X += 1;
@@ -48,6 +50,7 @@ void AChessPawn::PossibleMoves(AGameField* Field)
 				}
 			}
 		}
+		// check if there are any pieces capturable
 		if (StartY > 0)
 		{
 			temp.X = StartX + 1;
@@ -70,6 +73,7 @@ void AChessPawn::PossibleMoves(AGameField* Field)
 			}
 		}
 	}
+	// computing for a black pawn
 	else if (this->BitColor == 1 && StartX > 0)
 	{
 		FVector2D temp(StartX - 1, StartY);

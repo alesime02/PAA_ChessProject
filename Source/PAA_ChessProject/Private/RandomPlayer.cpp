@@ -142,6 +142,7 @@ void ARandomPlayer::OnTurn()
 			{
 				int32 RandPromotion = FMath::RandRange(1, 4);
 				Start->SetOccupier(' ');
+				GameMode->GField->ReceivingPromotion = MovingPiece;
 				GameMode->CreateCurrentMove(Start, End, MovingPiece, 'x');
 				GameMode->GField->RandomBlackPromotion();
 				GameMode->CreateFieldStatus();

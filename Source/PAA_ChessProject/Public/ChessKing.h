@@ -18,6 +18,7 @@ public:
 
 	UStaticMeshComponent* GetStatMeshComp();
 
+	// override of the function to compute the possible moves
 	virtual void PossibleMoves(AGameField* Field) override;
 
 protected:

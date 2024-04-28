@@ -30,6 +30,7 @@ void AChessKing::PossibleMoves(AGameField* Field)
 	double StartX = this->PieceGridPosition[0];
 	double StartY = this->PieceGridPosition[1];
 	EStatus EnemyStatus;
+	// // check wich of the moves of the king is possible from the position he is
 	TArray<FVector2D> Directions = { FVector2D(1,0), FVector2D(-1,0), FVector2D(0,1), FVector2D(0,-1), FVector2D(1,1), FVector2D(-1,1), FVector2D(1,-1), FVector2D(-1,-1) };
 	if (this->BitColor == 0)
 	{

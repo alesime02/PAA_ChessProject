@@ -18,17 +18,23 @@ class PAA_CHESSPROJECT_API AChessGameMode : public AGameModeBase
 	
 public:
 
+	// function that create the string that will appear on the replay buttons
 	void CreateCurrentMove(ATile* Start, ATile* End, APiece* Moving, TCHAR Case);
 
+	// function that create the string that represent the field after a move
 	void CreateFieldStatus();
 	
+	// array of players
 	TArray<IPlayerInterface*> Players;
 
+	// identifier of the player that has to play the turn
 	int32 CurrentPlayer;
 
+	// function called in blueprint to show at screen the current turn message
 	UFUNCTION(BlueprintCallable)
 	int32 GetCurrentPlayer() { return CurrentPlayer; }
 
+	// TSubclassOf template class that provides UClass type safety
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AGameField> GameFieldClass;
 
@@ -36,9 +42,11 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	AGameField* GField;
 
+	// boolean to determine the end of the game
 	UPROPERTY(Transient)
 	bool CheckMate = false;	
 
+	// boolean to determine the end of the game
 	UPROPERTY(Transient)
 	bool Pair = false;
 
@@ -56,14 +64,20 @@ public:
 	// called at the end of the game turn
 	void TurnNextPlayer();
 
+	// call the Current's PossibleMoves function than the FilterIllegals Function to let in the moves array
+	// of the piece only the legal moves then mark them with green
 	void LegalMoves(APiece* Current);
 
+	// check if a move is legal or not
 	void FilterIllegals(APiece* Current);
 
+	// check if there is a checkmate
 	void IsCheck(APiece* Current, AChessKing* EnemyKing, TArray<APiece*> EnemyPieces);
 
+	// check if the game is ended with a pair situation
 	void IsPair(TArray<APiece*> EnemyPieces);
 
+	// restore the original material of the tiles
 	void DecoloringTiles();
 };
 

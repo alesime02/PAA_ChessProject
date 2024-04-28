@@ -18,24 +18,18 @@ public:
 
 	UStaticMeshComponent* GetStatMeshComp();
 
+	// override of the function to compute the possible moves
 	virtual void PossibleMoves(AGameField* Field) override;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	/*// (x, y) position of the tile, aggiunto per i test
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	FVector2D RookGridPosition;*/
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USceneComponent* Scene;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UStaticMeshComponent* StaticMeshComponent;
-
-	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	int32 BitColor;*/
 
 public:	
 	// Called every frame

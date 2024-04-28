@@ -235,7 +235,7 @@ void AGameField::ResetField()
 	}
 }
 
-// works as the resetField but it's
+// works as the resetField but it's called in the blueprint and take as input the replay button variables
 void AGameField::ReplayField(FString FieldToReturn, int32 Player)
 {
 	AChessGameMode* GameMode = Cast<AChessGameMode>(GetWorld()->GetAuthGameMode());
@@ -308,9 +308,9 @@ void AGameField::SpawnPieces(FString Field)
 {
 	int32 NewX = 7;
 	int32 NewY = 0;
-	//const float PieceScale = PieceSize / 100;
+	// parse the string and spawn the pieces as described
+	// the pieces are by default white so when a black one si spawned it change his material
 	for (int32 i = 0; i < Field.Len(); ++i)
-	//for (auto i : Field)
 	{
 		TCHAR Character = Field[i];
 		if (Character == '/')
@@ -448,10 +448,10 @@ FVector2D AGameField::GetXYPositionByRelativeLocation(const FVector& Location) c
 {
 	const double x = Location[0] / (TileSize * NormalizedCellPadding);
 	const double y = Location[1] / (TileSize * NormalizedCellPadding);
-	// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("x=%f,y=%f"), x, y));
 	return FVector2D(x, y);
 }
 
+// similar to the spawning of the tiles, those functions creates the pieces and assigns the variables involved
 void AGameField::SpawnBlackPiece(APiece* ToSpawn, FString MaterialPath, int32 DestX, int32 DestY, TCHAR id, UStaticMeshComponent* Component)
 {
 	const float PieceScale = PieceSize / 100;

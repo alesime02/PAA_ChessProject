@@ -23,6 +23,7 @@ void AChessGameMode::BeginPlay()
 	int32 FieldSize;
 	if (GameFieldClass != nullptr)
 	{
+		// generate the field and inizialize teh pointer to it
 		GField = GetWorld()->SpawnActor<AGameField>(GameFieldClass);
 		FieldSize = GField->Size;
 	}
@@ -31,6 +32,7 @@ void AChessGameMode::BeginPlay()
 		UE_LOG(LogTemp, Error, TEXT("Game Field is null"));
 	}
 
+	// set the camera for the game
 	float CameraPosX = ((GField->TileSize * (FieldSize + ((FieldSize - 1) * GField->NormalizedCellPadding) - (FieldSize - 1))) / 2) - (GField->TileSize / 2);
 	FVector CameraPos(CameraPosX, CameraPosX, 1000.0f);
 	HumanPlayer->SetActorLocationAndRotation(CameraPos, FRotationMatrix::MakeFromX(FVector(0, 0, -1)).Rotator());
@@ -67,6 +69,8 @@ int32 AChessGameMode::GetNextPlayer(int32 Player)
 	return Player;
 }
 
+
+// check if the game is ended or the next player has to play his turn
 void AChessGameMode::TurnNextPlayer()
 {
 	if (CheckMate) 
@@ -92,6 +96,7 @@ void AChessGameMode::TurnNextPlayer()
 
 void AChessGameMode::FilterIllegals(APiece* Current)
 {
+	// for white pieces
 	if (Current->BitColor == 0)
 	{
 		FVector2D KingPosition = GField->WhiteKing->PieceGridPosition;
@@ -102,11 +107,11 @@ void AChessGameMode::FilterIllegals(APiece* Current)
 		}
 		TArray<FVector2D> ActualMoves = Current->Moves;
 		FVector2D ToNotCount(-1, -1);
-		// scorro le mosse possibili della pedina che ho cliccato
+		// scroll the possible moves of the piece clicked
 		for (auto i : Current->Moves)
 		{
 			ATile* Start = GField->TileMap[Current->PieceGridPosition];
-			//simulo la mossa
+			// simulate the move
 			if (MovingKing)
 			{
 				KingPosition = i;
@@ -119,7 +124,7 @@ void AChessGameMode::FilterIllegals(APiece* Current)
 				ToNotCount = End->GetGridPosition();
 			}
 			End->SetTileStatus(EStatus::WHITEOCCUPIED);
-			//calcolo contromosse dei pezzi nemici
+			// compute the enemies possible after the simulated move
 			bool loopBreaker = false;
 			for (auto Piece : GField->BPieceInGame)
 			{
@@ -131,6 +136,7 @@ void AChessGameMode::FilterIllegals(APiece* Current)
 				{
 					continue;
 				}
+				// check if the ally king is on check after that move and it removes it
 				Piece->PossibleMoves(GField);
 				for (auto EnemyMove : Piece->Moves)
 				{
@@ -150,7 +156,7 @@ void AChessGameMode::FilterIllegals(APiece* Current)
 		}
 		Current->Moves = ActualMoves;
 	}
-
+	// for black pieces
 	else
 	{
 		FVector2D KingPosition = GField->BlackKing->PieceGridPosition;
@@ -161,11 +167,9 @@ void AChessGameMode::FilterIllegals(APiece* Current)
 		}
 		TArray<FVector2D> ActualMoves = Current->Moves;
 		FVector2D ToNotCount(-1, -1);
-		// scorro le mosse possibili della pedina che ho cliccato
 		for (auto i : Current->Moves)
 		{
 			ATile* Start = GField->TileMap[Current->PieceGridPosition];
-			//simulo la mossa
 			if (MovingKing)
 			{
 				KingPosition = i;
@@ -178,7 +182,6 @@ void AChessGameMode::FilterIllegals(APiece* Current)
 				ToNotCount = End->GetGridPosition();
 			}
 			End->SetTileStatus(EStatus::BLACKOCCUPIED);
-			//calcolo contromosse dei pezzi nemici
 			bool loopBreaker = false;
 			for (auto Piece : GField->WPieceInGame)
 			{
@@ -213,6 +216,7 @@ void AChessGameMode::FilterIllegals(APiece* Current)
 
 void AChessGameMode::IsCheck(APiece* Current, AChessKing* EnemyKing, TArray<APiece*> EnemyPieces)
 {
+	// check if the king is on check and there are no legal moves for each of the king's ally pieces
 	Current->PossibleMoves(GField);
 	TArray<FVector2D> CopyOfMoves = Current->Moves;
 	for (auto PossibleMove : CopyOfMoves)
@@ -249,6 +253,10 @@ void AChessGameMode::IsCheck(APiece* Current, AChessKing* EnemyKing, TArray<APie
 
 void AChessGameMode::IsPair(TArray<APiece*> EnemyPieces)
 {
+	// check if the field is in one of this pair status
+	// king vs king
+	// king and bishop vs king
+	// king and knight vs king
 	auto GameInstance = Cast<UChessGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (GField->WPieceInGame.Num() + GField->BPieceInGame.Num() == 2)
 	{
@@ -289,6 +297,7 @@ void AChessGameMode::IsPair(TArray<APiece*> EnemyPieces)
 			
 		}
 	}
+	// check if the king isn't on check but there are no legal moves for each of the king's ally pieces
 	for (auto Enemy : EnemyPieces)
 	{
 		LegalMoves(Enemy);
@@ -309,6 +318,7 @@ void AChessGameMode::IsPair(TArray<APiece*> EnemyPieces)
 
 void AChessGameMode::DecoloringTiles()
 {
+	// restore the originale material of the tiles
 	for (auto i : GField->TileArray)
 	{
 		FVector2D Coordinates = i->GetGridPosition();
@@ -333,6 +343,7 @@ void AChessGameMode::DecoloringTiles()
 
 void AChessGameMode::CreateCurrentMove(ATile* Start, ATile* End, APiece* Moving, TCHAR Case)
 {
+	// create the string that describe tha move just happened
 	TArray<TCHAR> JustHappened_Array;
 	TArray<TCHAR> Columns = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' };
 
@@ -360,6 +371,7 @@ void AChessGameMode::CreateCurrentMove(ATile* Start, ATile* End, APiece* Moving,
 
 void AChessGameMode::CreateFieldStatus()
 {
+	// create the string that describe the field status using the FEN notation
 	FString Status;
 	for (int32 x = 7; x >= 0; x--)
 	{
@@ -401,8 +413,6 @@ void AChessGameMode::CreateFieldStatus()
 	{
 		GameInstance->SetField(Status);
 	}
-	UE_LOG(LogTemp, Error, TEXT("%s"), *GameInstance->GetField());
-	
 }
 
 

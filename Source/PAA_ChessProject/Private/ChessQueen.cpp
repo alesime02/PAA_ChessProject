@@ -39,10 +39,12 @@ void AChessQueen::PossibleMoves(AGameField* Field)
 	{
 		EnemyStatus = EStatus::WHITEOCCUPIED;
 	}
+	// iterate on all the directions possible for this piece
 	for (int32 i = 0; i < Directions.Num(); i++)
 	{
 		FVector2D temp(StartX, StartY);
 		temp = temp + Directions[i];
+		// explore the current direction until it find an obstacle or the end of the field
 		while (Field->TileMap.Find(temp) != nullptr)
 		{
 			ATile* PossibleNext = Field->TileMap[temp];
@@ -51,15 +53,19 @@ void AChessQueen::PossibleMoves(AGameField* Field)
 				this->Moves.Add(temp);
 				temp = temp + Directions[i];
 			}
+			// if it find an enemy piece
 			else if (PossibleNext->GetTileStatus() == EnemyStatus)
 			{
 				this->Moves.Add(temp);
+				// return to the starting position
 				temp.X = StartX;
 				temp.Y = StartY;
 				break;
 			}
+			// if it arrives at the end of the field or it finds an ally piece
 			else
 			{
+				// return to the starting position
 				temp.X = StartX;
 				temp.Y = StartY;
 				break;

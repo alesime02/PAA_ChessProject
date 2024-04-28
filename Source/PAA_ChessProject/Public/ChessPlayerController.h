@@ -10,7 +10,9 @@
 #include "EnhancedInputSubsystems.h"
 #include "ChessPlayerController.generated.h"
 
+// event to spawn the replay buttons
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FButtonSpawn);
+// event to spanw the promotion menu
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPromotion);
 /**
  * 
